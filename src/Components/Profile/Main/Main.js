@@ -1,0 +1,28 @@
+import React from "react";
+import SideBar from "./SideBar/SideBar";
+import styled from "styled-components";
+import Feed from "../../Index/Main/NewsFeed/Feed/Feed";
+import { colorGreyMain } from "../../../Constants/Colors";
+const Container = styled.div`
+    flex: 1;
+    display: flex;
+    background: ${colorGreyMain};
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    & > :last-child{
+        flex: 1;
+        margin-left: 20px;
+    }
+`;
+
+function Main({ profileUser }) {
+    return (
+        <Container>
+            <SideBar />
+            <Feed profilePage={true} profileUser={profileUser} />
+        </Container>
+    );
+}
+
+export default Main;
