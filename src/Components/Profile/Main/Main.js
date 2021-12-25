@@ -30,7 +30,12 @@ const Container = styled.div`
 function Main({ profileUser }) {
     return (
         <Container>
-            <SideBar />
+            <div>
+                <SideBar />
+                <SideBar />
+                <SideBar />
+
+            </div>
             <Feed profilePage={true} profileUser={profileUser} />
         </Container>
     );

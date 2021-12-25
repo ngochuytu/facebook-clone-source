@@ -18,16 +18,9 @@ import LiveVideos from '../../Images/Index/Main/SideBar/LiveVideos.png';
 import AvatarPic from '../../Images/Avatar.png';
 import { useFireBaseAuthContext } from "../../Contexts/FireBaseAuthContext";
 import styled from "styled-components";
-import { colorGreyMain } from "../../Constants/Colors";
 import ListItem from "../ListItem/ListItem";
 
-const Container = styled.div`
-    background: ${colorGreyMain};
-    padding: 10px 0;
-`;
-
 const ListBookmarks = styled.ul``;
-
 
 function Bookmarks() {
     const { currentUser } = useFireBaseAuthContext();
@@ -122,13 +115,13 @@ function Bookmarks() {
     ];
 
     return (
-        <Container>
+        <>
             <ListBookmarks>
                 {BOOKMARKS_GALLERY.map(
                     ({ id, img, title, url }) => <ListItem key={id} img={img} title={title} url={url || '/'} />
                 )}
             </ListBookmarks>
-        </Container>
+        </>
     );
 }
 

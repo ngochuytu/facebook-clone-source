@@ -30,11 +30,11 @@ const UserWrapper = styled(Link)`
     padding: 3.5px 9px 3.5px 4px;
     border-radius: 999px;
     cursor: pointer;
-    background: ${props => props.isSelfProfile ? 'rgb(38, 57, 81)' : null};
+    background: ${props => props.currentUserProfile ? 'rgb(38, 57, 81)' : null};
     margin-right: 12px;
 
     &:hover{
-        background: ${props => props.isSelfProfile ? 'rgb(60,77,99)' : colorGreyInput};
+        background: ${props => props.currentUserProfile ? 'rgb(60,77,99)' : colorGreyInput};
     }
     @media screen and (max-width: ${breakPointLarge}){
         display: none;
@@ -49,7 +49,7 @@ const Avatar = styled.img`
 
 const Username = styled.p`
     max-width: 75px;
-    color: ${props => props.isSelfProfile ? colorBlueHeaderCenter : colorGreyIconHeaderRight};
+    color: ${props => props.currentUserProfile ? colorBlueHeaderCenter : colorGreyIconHeaderRight};
     font-weight: 700;
     margin: 0 0 0 5px;
     text-overflow: ellipsis;
@@ -126,20 +126,20 @@ const ICONS_INDEX = {
 };
 
 const ACTION_TYPES = {
-    IS_SELF_PROFILE: "isSelfProfile",
+    CURRENT_USER_PROFILE: "currentUserProfile",
     MESSAGES: "messages",
     NOTIFICATIONS: "notifications"
 };
 
 const initialState = {
-    isSelfProfile: false,
+    currentUserProfile: false,
     activeIcon: ICONS_INDEX.NOT_ACTIVE
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case ACTION_TYPES.IS_SELF_PROFILE:
-            return { ...state, isSelfProfile: true };
+        case ACTION_TYPES.CURRENT_USER_PROFILE:
+            return { ...state, currentUserProfile: true };
         case ACTION_TYPES.MESSAGES:
             return { ...state, activeIcon: state.activeIcon === ICONS_INDEX.MESSAGE ? 0 : ICONS_INDEX.MESSAGE };
         case ACTION_TYPES.NOTIFICATIONS:
@@ -158,7 +158,7 @@ function HeaderRight() {
     useEffect(() => {
         const checkSelfProfile = () => {
             if (location.pathname === `/${uid}`)
-                dispatch({ type: ACTION_TYPES.IS_SELF_PROFILE });
+                dispatch({ type: ACTION_TYPES.CURRENT_USER_PROFILE });
         };
 
         checkSelfProfile();
@@ -185,9 +185,9 @@ function HeaderRight() {
 
     return (
         <Container>
-            <UserWrapper to={`/${uid}`} isSelfProfile={state.isSelfProfile}>
+            <UserWrapper to={`/${uid}`} currentUserProfile={state.currentUserProfile}>
                 <Avatar src={photoURL || AvatarPic} />
-                <Username isSelfProfile={state.isSelfProfile}>{displayName}</Username>
+                <Username currentUserProfile={state.currentUserProfile}>{displayName}</Username>
             </UserWrapper>
             <IconWrapper activeIcon={state.activeIcon} onClick={() => dispatch({ type: ACTION_TYPES.MESSAGES })}>
                 <ChatIconFilled />
