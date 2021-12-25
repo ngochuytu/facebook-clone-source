@@ -102,7 +102,9 @@ function HeaderCenter() {
                 case '/':
                     setActiveNavigationItem(1);
                     break;
-
+                case '/bookmarks':
+                    setActiveNavigationItem(5);
+                    break;
                 default:
                     break;
             }
@@ -129,7 +131,7 @@ function HeaderCenter() {
             <NavigationWrapper to='/'>
                 <GroupCircleOutlinedIcon />
             </NavigationWrapper>
-            <NavigationWrapper to='/'>
+            <NavigationWrapper to='/bookmarks'>
                 <MenuIcon />
             </NavigationWrapper>
         </Container>

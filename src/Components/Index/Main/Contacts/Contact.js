@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import ContactItem from '../Item/Item';
-import { ContactContainer as Container } from "../Main";
-// import { Container } from '../SideBar/SideBar';
 import { collection, getDocs } from '@firebase/firestore';
 import { database } from '../../../../firebase';
 import { useFireBaseAuthContext } from '../../../../Contexts/FireBaseAuthContext';
 import AvatarPic from '../../../../Images/Avatar.png';
 import { colorGreySearchIcon } from "../../../../Constants/Colors";
 import { collectionNames } from "../../../../Constants/FireStoreNaming";
+import ListItem from "../../../ListItem/ListItem";
 
 const Header = styled.div``;
 const Title = styled.p`
@@ -19,6 +17,7 @@ const Title = styled.p`
     margin-bottom: 10px;
 `;
 const ListContacts = styled.ul``;
+
 
 export default function Contact() {
     const [users, setUsers] = useState([]);
@@ -38,13 +37,13 @@ export default function Contact() {
     }, [currentUser.uid]);
 
     return (
-        <Container>
+        <>
             <Header>
                 <Title>Contacts</Title>
             </Header>
             <ListContacts>
-                {users.length ? users.map(({ uid, photoURL, displayName }) => <ContactItem key={uid} img={photoURL || AvatarPic} title={displayName} url={`/${uid}`} />) : null}
+                {users.length ? users.map(({ uid, photoURL, displayName }) => <ListItem key={uid} img={photoURL || AvatarPic} title={displayName} url={`/${uid}`} />) : null}
             </ListContacts>
-        </Container>
+        </>
     );
 }

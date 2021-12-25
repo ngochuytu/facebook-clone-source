@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
-import { colorGreyIconHeaderRight, colorGreyInput } from "../../../../Constants/Colors";
+import { headerSpacing } from "../../Constants/Spacing/Header";
+import { colorGreyIconHeaderRight, colorGreyInput } from "../../Constants/Colors";
+
 
 const Container = styled.li`
-    width: 95%;
-    padding: 7.5px 8.5px;
-    margin-left: 9.5px;
+    width: calc(100% - 10px); /*-10px margin*/
+    padding: 7.5px calc(${headerSpacing.paddingHorizontal});
+    margin: 0 5px;
     border-radius: 10px;
     cursor: pointer;
-     //For hover 
 
     &:hover{
         background: ${colorGreyInput};
@@ -34,7 +35,7 @@ const LinkTo = styled(Link)`
     align-items: center;
 `;
 
-function Item({ img, title, url }) {
+function ListItem({ img, title, url }) {
     return (
         <Container>
             <LinkTo to={url}>
@@ -45,4 +46,4 @@ function Item({ img, title, url }) {
     );
 }
 
-export default Item;
+export default ListItem;

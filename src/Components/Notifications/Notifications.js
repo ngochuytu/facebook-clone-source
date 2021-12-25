@@ -16,7 +16,6 @@ import { breakPointMedium, breakPointSmall, breakPointVerySmall } from "../../Co
 const Container = styled.div`
     width: ${notificationSpacing.width.large};
     max-height: calc(100vh - ${headerSpacing.height});
-    /* overflow-y: scroll; */
     overflow-x: hidden;
     position: fixed;
     top: ${headerSpacing.height};

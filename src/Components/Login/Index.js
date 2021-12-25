@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { breakPointLarge, breakPointMedium } from "../../Constants/BreakPoints";
+import { breakPointLarge } from "../../Constants/BreakPoints";
 import { colorGreyBackground } from "../../Constants/Colors";
 import Introduce from './Introduce';
 import LoginByAvatar from './LoginByAvatar';
@@ -12,7 +12,6 @@ const recentLogins = null;
 
 export const Wrapper = styled.div`
     min-height: 100vh;
-    /* padding: 150px 100px 100px 100px; */
     background: ${colorGreyBackground};
     display: flex;
     align-items: center;

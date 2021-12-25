@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import SideBar from "./SideBar/SideBar";
 import Contact from "./Contacts/Contact";
 import NewsFeed from "./NewsFeed/NewsFeed";
 import { colorGreyInput, colorGreyMain } from "../../../Constants/Colors";
 import { indexMainSpacing } from "../../../Constants/Spacing/Index";
 import { headerLeftSpacing, headerSpacing } from "../../../Constants/Spacing/Header";
 import { breakPointLarge, breakPointMedium } from "../../../Constants/BreakPoints";
+import Bookmarks from "../../Bookmarks/Bookmarks";
 
 const Container = styled.div`
     display: flex;
@@ -18,7 +18,7 @@ const Container = styled.div`
     }
 `;
 
-const ChildContainerBase = styled.div`
+export const SideScrollContainer = styled.div`
     max-width: ${headerLeftSpacing.maxWidth};
     flex: 1;
     height: calc(100vh - ${headerSpacing.height});
@@ -46,13 +46,13 @@ const ChildContainerBase = styled.div`
     }
 `;
 
-export const SideBarContainer = styled(ChildContainerBase)`
+export const BookmarksContainer = styled(SideScrollContainer)`
     @media screen and (max-width: ${breakPointLarge}){
         display: none;
     }
 `;
 
-export const ContactContainer = styled(ChildContainerBase)`
+export const ContactContainer = styled(SideScrollContainer)`
     @media screen and (max-width: ${breakPointLarge}){
         flex-grow: 0;
         flex-basis: 30%;
@@ -67,9 +67,13 @@ export const ContactContainer = styled(ChildContainerBase)`
 function Main() {
     return (
         <Container>
-            <SideBar />
+            <BookmarksContainer>
+                <Bookmarks />
+            </BookmarksContainer>
             <NewsFeed />
-            <Contact />
+            <ContactContainer>
+                <Contact />
+            </ContactContainer>
         </Container>
     );
 }
