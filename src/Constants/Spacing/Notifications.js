@@ -1,3 +1,7 @@
 export const notificationSpacing = {
-    width: "350px"
+    width: {
+        large: "350px",
+        small: "300px",
+        verySmall: "250px"
+    }
 }

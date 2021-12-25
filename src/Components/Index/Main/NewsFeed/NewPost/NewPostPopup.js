@@ -12,7 +12,8 @@ import { usePostsContext } from "../Feed/Feed";
 import { useFireBaseAuthContext } from "../../../../../Contexts/FireBaseAuthContext";
 import { collectionNames } from "../../../../../Constants/FireStoreNaming";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-
+import { breakPointMedium, breakPointSmall } from "../../../../../Constants/BreakPoints";
+import { Link } from "react-router-dom";
 
 const titlePaddingY = `15px`;
 const AddToPostAttachmentMinHeight = '150px';
@@ -24,14 +25,26 @@ const Container = styled.div`
     background: rgba(0,0,0,.5);
     position: fixed;
     inset: 0;
-    z-index: 10000;
+    z-index: 4;
     padding-bottom: 10px;
 `;
+
 const Form = styled.form`
     background: ${backgroundColorGreyHeader};
     border-radius: 10px;
-    width: 50%;
-    max-width: 500px;
+    width: clamp(400px, 50%, 500px);
+
+    @media screen and (max-width: ${breakPointMedium}){
+        width: 75%;
+    }
+
+    @media screen and (max-width: ${breakPointSmall}){
+        width: 85%;
+    
+        & > :first-child{
+            font-size: 18px;
+        }
+    }
 `;
 
 const Title = styled.div`
@@ -42,6 +55,17 @@ const Title = styled.div`
     padding: ${titlePaddingY} 0;
     position: relative;
     color: ${colorGreyIconHeaderRight};
+    font-size: 20px;
+    font-weight: 700;
+
+    @media screen and (max-width: ${breakPointSmall}){
+        /* Cancel icon */
+        & > :last-child{
+            width: 25px !important;
+            height: 25px !important;
+            top: 12.5px;
+        }
+    }
 `;
 
 const Main = styled.div`
@@ -115,6 +139,10 @@ const TextContent = styled.p`
         content: attr(data-placeholder);
         color: ${colorGreySearchIcon};
     }
+
+    @media screen and (max-width: ${breakPointSmall}){
+        font-size: 16px;
+    }
 `;
 
 const AddToPostAttachment = styled.div`
@@ -162,7 +190,13 @@ const AddToPostOptions = styled.div`
     margin: 15px 0;
 
     & > ${Title}{
-        font-weight: 700;
+        font-size: 16px;
+    }
+
+    @media screen and (max-width: ${breakPointSmall}){
+        & > ${Title}{
+            font-size: 14px;
+        }
     }
 `;
 
@@ -425,12 +459,14 @@ export default function NewPostPopup({ newPost, editPost }) {
             <Container onMouseDown={closePopupHandler}>
                 <Form method="POST" ref={formRef}>
                     <Title>
-                        <h3>{title}</h3>
+                        {title}
                         <Cancel ref={cancelCreatePostRef} size="35px" right={titlePaddingY} />
                     </Title>
                     <Main>
                         <UserInformation>
-                            <Avatar src={currentUser.photoURL || AvatarPic} />
+                            <Link to={`/${currentUser.uid}`}>
+                                <Avatar src={currentUser.photoURL || AvatarPic} />
+                            </Link>
                             <Username>{currentUser.displayName}</Username>
                         </UserInformation>
                         <PostContent selectedStyle={openAddAttachment}>

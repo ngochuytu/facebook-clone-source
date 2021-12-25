@@ -21,34 +21,8 @@ import AvatarPic from '../../../../Images/Avatar.png';
 import { useFireBaseAuthContext } from '../../../../Contexts/FireBaseAuthContext';
 import { colorGreyInput } from "../../../../Constants/Colors";
 import { headerSpacing, headerLeftSpacing } from "../../../../Constants/Spacing/Header";
-
-export const Container = styled.div`
-    max-width: ${headerLeftSpacing.maxWidth};
-    flex: 1;
-    height: calc(100vh - ${headerSpacing.height});
-    overflow-y: scroll;
-    position: sticky;
-    top: ${headerSpacing.height};
-
-    &::-webkit-scrollbar {
-        width: 0px;
-    }
-
-    &:hover{
-        ::-webkit-scrollbar{
-            width: 10px;
-        }
-    }
-
-    &::-webkit-scrollbar-track {
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: ${colorGreyInput};
-        border-radius: 10px;
-    }
-`;
+import { breakPointLarge } from "../../../../Constants/BreakPoints";
+import { SideBarContainer as Container } from "../Main";
 
 const ListFeatures = styled.ul``;
 

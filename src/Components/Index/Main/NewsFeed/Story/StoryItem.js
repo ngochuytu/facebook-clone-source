@@ -1,10 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
 const storyImageHover = `filter: brightness(.8);
-                        transform: scale(1.02);`
-
-
+                        transform: scale(1.02);`;
 
 const Avatar = styled.img`
     position: absolute;
@@ -16,7 +14,7 @@ const Avatar = styled.img`
     left: 10px;
     object-fit: cover;
     z-index: 1;
-`
+`;
 
 const StoryImage = styled.img`
     object-fit: cover;
@@ -28,7 +26,7 @@ const StoryImage = styled.img`
     &:hover{
         ${storyImageHover}
     }
-`
+`;
 
 const Username = styled.p`
     position: absolute;
@@ -38,7 +36,7 @@ const Username = styled.p`
     font-size: 1.05rem;
     color: #fff;
     z-index: 1;
-`
+`;
 
 const Container = styled.div`
     flex-shrink: 0;
@@ -54,7 +52,7 @@ const Container = styled.div`
     &:hover ${StoryImage}{
         ${storyImageHover}
     }
-`
+`;
 
 export default function StoryItem({ avatar, storyImage, username }) {
     return (
@@ -63,5 +61,5 @@ export default function StoryItem({ avatar, storyImage, username }) {
             <StoryImage src={storyImage} />
             <Username>{username}</Username>
         </Container>
-    )
+    );
 }

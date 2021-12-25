@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ContactItem from '../Item/Item';
-import { Container } from '../SideBar/SideBar';
+import { ContactContainer as Container } from "../Main";
+// import { Container } from '../SideBar/SideBar';
 import { collection, getDocs } from '@firebase/firestore';
 import { database } from '../../../../firebase';
 import { useFireBaseAuthContext } from '../../../../Contexts/FireBaseAuthContext';

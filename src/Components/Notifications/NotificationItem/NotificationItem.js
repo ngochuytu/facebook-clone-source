@@ -14,7 +14,6 @@ const Container = styled(Link)`
     background: ${backgroundColorGreyHeader};
     display: flex;
     align-items: flex-start;
-    width: 300px;
     max-height: 100px;
     padding: 15px;
     border-radius: 10px;
@@ -65,7 +64,6 @@ const TimeStamp = styled.small`
 
 
 const Unread = styled.div`
-
     width: 12.5px;
     height: 12.5px;
     border-radius: 50%;

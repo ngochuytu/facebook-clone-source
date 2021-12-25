@@ -18,6 +18,7 @@ import { database } from "../../../../../../../../firebase";
 import { collectionNames } from "../../../../../../../../Constants/FireStoreNaming";
 import { usePostsContext } from "../../../Feed";
 import { INTERACTION_EMOTES, INTERACTION_TYPES } from '../../../../../../../../Constants/InteractionEmotes';
+import { breakPointSmall, breakPointVerySmall } from "../../../../../../../../Constants/BreakPoints";
 
 const ButtonsContainer = styled.div`
     display: flex;
@@ -33,6 +34,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const Button = styled.div`
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,6 +42,12 @@ const Button = styled.div`
     border-radius: 5px;
     cursor: pointer;
     font-weight: 700;
+
+    & > :first-child{
+        width: 20px;
+        height: 20px;
+    }
+
     &:hover{
         background: ${colorGreyInput};
     }
@@ -50,20 +58,33 @@ const InteractionsList = styled.div`
     left: 0;
     transform: translateY(-100%);
     position: absolute;
-    z-index: 999;
+    z-index: 1;
     display: flex;
     border: 1px solid ${colorGreyInput};
     border-radius: 999px;
     background: ${backgroundColorGreyHeader};
+    
+    @media screen and (max-width: ${breakPointSmall}){
+        left: -15px;
+    }
+
+    @media screen and (max-width: ${breakPointVerySmall}){
+        left: calc(-10vw);
+    }
+
 `;
 
 const InteractionIcon = styled.img`
-    width: 37.5px;
+    width: 35px;
     margin: 5px;
     cursor: pointer;
     transition: transform 0.1s linear;
     &:hover{
         transform: scale(1.3);
+    }
+
+    @media screen and (max-width: ${breakPointSmall}){
+        width: 30px;
     }
 `;
 
@@ -72,8 +93,12 @@ const ButtonDescription = styled.p`
     margin-left: 10px;
     user-select: none;
 
-    //Like Btn
+    /* Like Btn */
     color: ${props => props.color ? props.color : 'inherit'};
+
+    @media screen and (max-width: ${breakPointVerySmall}){
+        font-size: 14px;
+    }
 `;
 
 const ThumbUpIcon = styled(ThumbUpFilledIcon)`

@@ -2,6 +2,6 @@
     --colorGreyMain: #18191a;
 }
 
-body{
+html, body{
     background: var(--colorGreyMain);
 }

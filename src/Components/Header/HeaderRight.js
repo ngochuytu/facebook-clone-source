@@ -11,9 +11,9 @@ import Notifications from "../Notifications/Notifications";
 import { colorBlueHeaderCenter, colorGreyIconHeaderRight, colorGreyInput, colorRed } from "../../Constants/Colors";
 import { headerLeftSpacing } from "../../Constants/Spacing/Header";
 import { useNotificationsContext } from "../../Contexts/NotificationsContext";
+import { breakPointLarge, breakPointMedium, breakPointVerySmall } from "../../Constants/BreakPoints";
 
 const Container = styled.div`
-    flex: 1;
     max-width: ${headerLeftSpacing.maxWidth};
     display: flex;
     justify-content: space-evenly;
@@ -36,6 +36,9 @@ const UserWrapper = styled(Link)`
     &:hover{
         background: ${props => props.isSelfProfile ? 'rgb(60,77,99)' : colorGreyInput};
     }
+    @media screen and (max-width: ${breakPointLarge}){
+        display: none;
+    }
 `;
 
 const Avatar = styled.img`
@@ -56,7 +59,7 @@ const Username = styled.p`
 `;
 
 
-const IconWrapper = styled.div`
+export const IconWrapper = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
@@ -100,6 +103,18 @@ const IconWrapper = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    
+    @media screen and (max-width: ${breakPointVerySmall}){
+        width: 30px;
+        height: 30px;
+        
+        &::before{
+            width: 20px;
+            height: 20px;
+            transform: translate(40%, -30%);
+            
+        }
     }
 `;
 

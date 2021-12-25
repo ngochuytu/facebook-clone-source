@@ -3,6 +3,8 @@ import SideBar from "./SideBar/SideBar";
 import styled from "styled-components";
 import Feed from "../../Index/Main/NewsFeed/Feed/Feed";
 import { colorGreyMain } from "../../../Constants/Colors";
+import { breakPointMedium } from "../../../Constants/BreakPoints";
+
 const Container = styled.div`
     flex: 1;
     display: flex;
@@ -13,6 +15,15 @@ const Container = styled.div`
     & > :last-child{
         flex: 1;
         margin-left: 20px;
+    }
+
+    @media screen and (max-width: ${breakPointMedium}){
+        flex-direction: column;
+
+        & > :last-child{
+            flex: 1;
+            margin-left: 0;
+        }
     }
 `;
 

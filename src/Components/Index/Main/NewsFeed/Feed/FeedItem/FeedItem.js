@@ -7,7 +7,7 @@ import { backgroundColorGreyHeader, colorGreySearchIcon } from '../../../../../.
 import Interaction from "./Interaction/Interaction";
 import More from './More/More';
 import { convertTimeStamp } from "../../../../../../Functions/ConvertTimeStamp";
-
+import { breakPointVerySmall } from "../../../../../../Constants/BreakPoints";
 
 const Content = styled.div``;
 
@@ -19,9 +19,15 @@ const Container = styled.div`
     & > *{
         padding: 10px 15px;
     }
-
+    
     & > ${Content}{
         padding: 10px 0px;
+    }
+    
+    @media screen and (max-width: ${breakPointVerySmall}){
+        & > *{
+            padding: 10px;
+        }        
     }
 `;
 

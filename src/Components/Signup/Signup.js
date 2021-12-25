@@ -7,6 +7,7 @@ import { colorGreyBackground } from "../../Constants/Colors";
 export const Container = styled.div`
     background: ${colorGreyBackground};
     min-height: 100vh;
+    padding: 15px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { loginFormSpacing } from "../../Constants/Spacing/LoginForm";
 import facebookSvg from '../../Images/Login/facebook-logo.svg';
-
+import { breakPointLarge, breakPointVerySmall } from "../../Constants/BreakPoints";
 
 
 export const Container = styled.div`
@@ -12,11 +12,15 @@ export const Container = styled.div`
     justify-content: center;
     margin-right: 40px;
 
-    @media screen and (max-width: 900px){
+    @media screen and (max-width: ${breakPointLarge}){
         align-items: center;
         margin: 0 0 40px 0;
-        width: ${loginFormSpacing.width};
+        width: ${loginFormSpacing.width.large};
         text-align: center;
+    }
+
+    @media screen and (max-width: ${breakPointVerySmall}){
+        width: ${loginFormSpacing.width.verySmall};
     }
 `;
 
@@ -26,7 +30,8 @@ export const Facebook = styled.img`
     width: 200px;
     margin-left: -20px;
 
-    @media screen and (max-width: 900px){
+
+    @media screen and (max-width: ${breakPointLarge}){
         width: 250px;
         margin: 0 auto;
     }

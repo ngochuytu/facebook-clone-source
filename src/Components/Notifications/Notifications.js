@@ -10,9 +10,11 @@ import { database } from "../../firebase";
 import NotificationItem from "./NotificationItem/NotificationItem";
 import NotificationsIconFilled from '@material-ui/icons/Notifications';
 import NotificationSkeleton from "../Skeleton/NotificationSkeleton";
+import { breakPointMedium, breakPointSmall, breakPointVerySmall } from "../../Constants/BreakPoints";
+
 
 const Container = styled.div`
-    width: ${notificationSpacing.width};
+    width: ${notificationSpacing.width.large};
     max-height: calc(100vh - ${headerSpacing.height});
     /* overflow-y: scroll; */
     overflow-x: hidden;
@@ -46,6 +48,16 @@ const Container = styled.div`
         background: ${colorGreyInput};
         border-radius: 10px;
     }
+
+    
+    @media screen and (max-width: ${breakPointSmall}){
+        width: ${notificationSpacing.width.small};
+    }
+
+    @media screen and (max-width: ${breakPointVerySmall}){
+        width: ${notificationSpacing.width.verySmall};
+    }
+
 `;
 
 const Title = styled.h2`
@@ -55,8 +67,20 @@ const Title = styled.h2`
 
 const NotificationItems = styled.div`
     & > *{
-        width: ${notificationSpacing.width};
+        width: ${notificationSpacing.width.large};
         margin-bottom: 0;
+    }
+
+    @media screen and (max-width: ${breakPointSmall}){
+        & > *{
+            width: ${notificationSpacing.width.small};
+        }
+    }
+    
+    @media screen and (max-width: ${breakPointVerySmall}){
+        & > *{
+            width: ${notificationSpacing.width.verySmall};
+        }
     }
 `;
 

@@ -4,7 +4,11 @@ export const headerSpacing = {
 };
 
 export const headerCenterSpacing = {
-    paddingHorizontal: "40px"
+    paddingHorizontal: {
+        default: "40px",
+        large: "15px",
+        medium: "5px",
+    }
 };
 
 export const headerLeftSpacing = {

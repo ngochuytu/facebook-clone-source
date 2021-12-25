@@ -6,13 +6,14 @@ import google from '../../Images/Login/google.png';
 import ThirdPartyLogin from './ThirdPartyLogin';
 import { colorBlue } from "../../Constants/Colors";
 import { loginFormSpacing } from "../../Constants/Spacing/LoginForm";
+import { breakPointMedium, breakPointVerySmall } from "../../Constants/BreakPoints";
 
 
 const colorGreyBorder = `#dddfe2`;
 const borderRadius = `5px`;
 
 export const Form = styled.form`
-    width: ${loginFormSpacing.width};
+    width: ${loginFormSpacing.width.large};
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,6 +22,16 @@ export const Form = styled.form`
     border: none;
     border-radius: ${borderRadius};
     box-shadow: 0 0 3px -0.5px #000;
+
+    @media screen and (max-width: ${breakPointMedium}){
+        & > *{
+            font-size: 16px !important;
+        }
+    }
+
+    @media screen and (max-width: ${breakPointVerySmall}){
+        width: ${loginFormSpacing.width.verySmall};
+    }
 `;
 
 export const Input = styled.input`
@@ -31,6 +42,8 @@ export const Input = styled.input`
     border: 1px solid ${colorGreyBorder};
     border-radius: ${borderRadius};
     outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &::placeholder{
         font-size: 1rem;
@@ -78,8 +91,9 @@ export const HorizontalLine = styled.div`
 `;
 
 export const SignUp = styled(Link)`
-    width: 55%;
+    width: 200px;
     height: 45px;
+    padding: 0 10px;
     background: #42b72a;
     display: flex;
     justify-content: center;

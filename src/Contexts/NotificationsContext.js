@@ -2,7 +2,9 @@ import { collection, doc, getDoc, setDoc, onSnapshot } from "firebase/firestore"
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import styled from "styled-components";
 import NotificationItem from "../Components/Notifications/NotificationItem/NotificationItem";
+import { breakPointVerySmall } from "../Constants/BreakPoints";
 import { collectionNames, documentNames } from "../Constants/FireStoreNaming";
+import { notificationSpacing } from "../Constants/Spacing/Notifications";
 import { database } from "../firebase";
 import { useFireBaseAuthContext } from "./FireBaseAuthContext";
 
@@ -10,7 +12,19 @@ const Notifications = styled.div`
     position: fixed;
     bottom: 20px;
     left: 20px;
-    z-index: 9999999;
+    z-index: 3;
+
+    & > *{
+        width: ${notificationSpacing.width.small};
+    }
+    
+    @media screen and (max-width: ${breakPointVerySmall}){
+        left: 5px;
+
+        & > *{
+            width: ${notificationSpacing.width.verySmall};
+        }        
+    }
 `;
 
 const NotificationsContext = createContext();

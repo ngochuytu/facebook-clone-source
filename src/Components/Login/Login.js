@@ -1,32 +1,38 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { breakPointLarge, breakPointMedium } from "../../Constants/BreakPoints";
 import { colorGreyBackground } from "../../Constants/Colors";
 import Introduce from './Introduce';
 import LoginByAvatar from './LoginByAvatar';
 import LoginForm from './LoginForm';
+
 
 const recentLogins = null;
 
 
 export const Wrapper = styled.div`
     min-height: 100vh;
-    padding: 150px 100px 100px 100px;
+    /* padding: 150px 100px 100px 100px; */
     background: ${colorGreyBackground};
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    @media screen and (max-width: 900px){
-        padding: 30px;
+    @media screen and (max-width: ${breakPointLarge}){
+        padding: 0px;
     }
 `;
 
 const Container = styled.div`
     max-width: 1000px;
-    margin: 0 auto;
     display: flex;
     align-items: flex-start;
+    padding: 0 30px;
 
-    @media screen and (max-width: 900px){
+    @media screen and (max-width: ${breakPointLarge}){
         flex-direction: column;
         align-items: center;
+        padding: 0;
     }
 `;
 

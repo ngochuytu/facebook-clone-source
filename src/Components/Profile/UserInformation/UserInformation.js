@@ -10,14 +10,22 @@ import { useParams } from "react-router";
 import { backgroundColorGreyHeader, colorBlueHeaderCenter, colorGreyInput, colorGreySearchIcon, colorGreyIconHeaderRight, colorGreyDisabledButton, colorGreyDisabledText, colorBlueActiveButton } from "../../../Constants/Colors";
 import { collectionNames } from "../../../Constants/FireStoreNaming";
 import { profileSpacing } from "../../../Constants/Spacing/Profile";
+import { breakPointLarge, breakPointMedium, breakPointVerySmall } from "../../../Constants/BreakPoints";
 
 
 const Container = styled.div`
     background: ${backgroundColorGreyHeader};
 
     & > *{
-        width: ${profileSpacing.width};
+        width: ${profileSpacing.width.default};
         margin: 0 auto;
+    }
+
+    @media screen and (max-width: ${breakPointLarge}){
+        & > *{
+            width: ${profileSpacing.width.large};
+            margin: 0 auto;
+        }    
     }
 `;
 
@@ -36,6 +44,11 @@ const Avatar = styled.img`
     width: 150px;
     height: 150px;
     border-radius: 50%;
+
+    @media screen and (max-width: ${breakPointVerySmall}){
+        width: 100px;
+        height: 100px;
+    }
 `;
 
 const EditAvatarWrapper = styled.div`
@@ -86,6 +99,7 @@ const BioWrapper = styled.div`
 
 const Bio = styled.p`
     color: ${colorGreySearchIcon};
+    margin-bottom: 5px;
 `;
 
 const EditBio = styled.p`
@@ -144,7 +158,7 @@ const Button = styled.button`
     
 
     ${props => props.type === "submit" ? `
-        ${(props.editDisplayName === "" || props.editDisplayName === props.displayName) ?
+        ${props.disable ?
             `
                 background: ${colorGreyDisabledButton};
                 color: ${colorGreyDisabledText};
@@ -188,12 +202,18 @@ const NavigationBar = styled.div`
         &:hover{
             background: initial;
         }
-    } 
+    }
+
+    @media screen and (max-width: ${breakPointMedium}){
+        flex: 1;
+    }
 `;
 
 const NavigationWrapper = styled(Link)`
+    flex: 1;
     display: flex;
     align-items: center;
+    justify-content: center;
     color: #b0b3b4;
     font-weight: 700;
     cursor: pointer;
@@ -204,6 +224,10 @@ const NavigationWrapper = styled(Link)`
     &:hover{
         background: ${colorGreyInput};
     }
+
+    @media screen and (max-width: ${breakPointVerySmall}){
+        font-size: 14px;
+    }
 `;
 
 const ACTIVE_NAVIGATION_ITEM = {
@@ -212,8 +236,8 @@ const ACTIVE_NAVIGATION_ITEM = {
     PHOTOS: 3,
 };
 
-function UserInformation({ profileUid, profileUser, setProfileUser }) {
-    const [editBio, setEditBio] = useState('');
+function UserInformation({ profileUser, setProfileUser }) {
+    const [editBio, setEditBio] = useState(profileUser.bio);
     const [openEditBioForm, setOpenEditBioForm] = useState(false);
     const { currentUser } = useFireBaseAuthContext();
     const [activeNavigationItem, setActiveNavigationItem] = useState(ACTIVE_NAVIGATION_ITEM.POSTS);
@@ -224,7 +248,7 @@ function UserInformation({ profileUid, profileUser, setProfileUser }) {
 
     const editBioSaveButtonHandler = e => {
         e.preventDefault();
-        if (editBio.length <= 50) {
+        if (editBio.length <= 50 && editBio !== profileUser.bio) {
             setDoc(doc(database, collectionNames.users, profileUser.uid), {
                 bio: editBio
             }, { merge: true }).then(() => {
@@ -239,7 +263,6 @@ function UserInformation({ profileUid, profileUser, setProfileUser }) {
             <Profile>
                 <AvatarWrapper>
                     <Avatar src={profileUser.photoURL || AvatarPic} />
-                    {/* {profileUid === currentUser.uid ? */}
                     {profileUser.uid === currentUser.uid ?
                         <EditAvatarWrapper>
                             <AvatarInput type="file" name="avatar" title=" " />
@@ -249,7 +272,7 @@ function UserInformation({ profileUid, profileUser, setProfileUser }) {
                 </AvatarWrapper>
                 <DisplayName>{profileUser.displayName}</DisplayName>
                 <BioWrapper>
-                    <Bio>{profileUser.bio}</Bio>
+                    {profileUser.bio && <Bio>{profileUser.bio}</Bio>}
                     {profileUser.uid === currentUser.uid ?
                         !openEditBioForm ?
                             <EditBio onClick={openAndCloseEditBioFormHandler}>Edit Your Bio</EditBio>
@@ -262,7 +285,7 @@ function UserInformation({ profileUid, profileUser, setProfileUser }) {
                             <CharactersRemaining>{50 - (editBio?.length || 0)} characters remaining</CharactersRemaining>
                             <ButtonsContainer>
                                 <Button type="button" onClick={openAndCloseEditBioFormHandler}>Cancel</Button>
-                                <Button type="submit" displayName={profileUser.displayName} editBio={editBio} onClick={editBioSaveButtonHandler}>Save</Button>
+                                <Button type="submit" disable={profileUser.bio === editBio} onClick={editBioSaveButtonHandler}>Save</Button>
                             </ButtonsContainer>
                         </EditBioForm>
                         : null

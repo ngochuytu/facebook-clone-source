@@ -4,18 +4,18 @@ import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import GroupCircleOutlinedIcon from '@material-ui/icons/SupervisedUserCircleOutlined';
-import SportsEsportsOutlinedIcon from '@material-ui/icons/SportsEsportsOutlined';
+import MenuIcon from '@material-ui/icons/Menu';
 import { Link, useLocation } from 'react-router-dom';
 import { colorBlueHeaderCenter, colorGreyInput } from "../../Constants/Colors";
 import { headerCenterSpacing } from "../../Constants/Spacing/Header";
 import { useRefetchPostsContext } from "../../Contexts/RefetchPostsContext";
+import { breakPointLarge, breakPointMedium } from "../../Constants/BreakPoints";
 
 const Container = styled.div`
-    flex: 1;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 0 ${headerCenterSpacing.paddingHorizontal};
+    padding: 0 ${headerCenterSpacing.paddingHorizontal.default};
     height: 90%;
 
     & > :nth-child(${props => props.activeNavigationItem}) > *{
@@ -28,16 +28,38 @@ const Container = styled.div`
         &:hover{
             background: initial;
         }
-        height: 110%; //10% left from above
+        height: 110%; /*10% thừa bên trên */
     }
 
+    & > :last-child{
+        display: none;
+    }
+
+    @media screen and (max-width: ${breakPointLarge}){
+        padding: 0 ${headerCenterSpacing.paddingHorizontal.large};
+
+        & > :last-child{
+            display: inherit;
+        }   
+    }
+
+    @media screen and (max-width: ${breakPointMedium}){
+        justify-content: flex-start;
+        padding: 0 ${headerCenterSpacing.paddingHorizontal.medium};
+        
+
+        & > *:not(:last-child){
+            display: none;
+        }
+
+    }
 `;
 
 const NavigationWrapper = styled(Link)`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(100% / 5);
+    width: calc(100% / 4); /* 100% chia tổng số icon*/
     height: 45px;
     border-radius: 5px;
     cursor: pointer;
@@ -55,6 +77,16 @@ const NavigationWrapper = styled(Link)`
     &:hover{
         background: ${colorGreyInput};
     }
+
+    @media screen and (max-width: ${breakPointLarge}){
+        /* width: calc(100% / 5); */
+    }
+
+    @media screen and (max-width: ${breakPointMedium}){
+        width: initial;
+        padding: 0 5px;
+    }
+
 `;
 
 function HeaderCenter() {
@@ -98,7 +130,7 @@ function HeaderCenter() {
                 <GroupCircleOutlinedIcon />
             </NavigationWrapper>
             <NavigationWrapper to='/'>
-                <SportsEsportsOutlinedIcon />
+                <MenuIcon />
             </NavigationWrapper>
         </Container>
     );

@@ -11,6 +11,7 @@ import { Route, useParams } from "react-router";
 import { colorGreyMain } from "../../Constants/Colors";
 import { collectionNames } from "../../Constants/FireStoreNaming";
 import { profileSpacing } from "../../Constants/Spacing/Profile";
+import { breakPointLarge, breakPointMedium } from "../../Constants/BreakPoints";
 
 const Container = styled.div`
     min-height: 100vh;
@@ -20,8 +21,12 @@ const Container = styled.div`
 `;
 
 const WidthWrapper = styled.div`
-    width: ${profileSpacing.width};
+    width: ${profileSpacing.width.default};
     margin: 0 auto;
+
+    @media screen and (max-width: ${breakPointLarge}){
+        width: ${profileSpacing.width.large};
+    }
 `;
 
 export default function Profile() {
