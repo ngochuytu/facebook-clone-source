@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-// import { HashRouter as Router, Switch, Route } from 'react-router-dom'; //Github pages
+// import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom'; //Github pages
 import { NotificationsProvider } from "./Contexts/NotificationsContext";
 import { useFireBaseAuthContext } from './Contexts/FireBaseAuthContext';
 import { Redirect } from 'react-router-dom';
