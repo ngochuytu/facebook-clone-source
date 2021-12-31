@@ -13,6 +13,11 @@
 
 #
 /Microsoft
+/.github
+/.firebase
+/.vscode
+/facebook.json
+
 
 # misc
 .DS_Store
