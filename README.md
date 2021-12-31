@@ -1,9 +1,5 @@
 # Facebook Clone
 
-## Github Pages 
-
-https://ngochuytu.github.io/facebook-clone
-
 ## Source Code 
 
 https://ngochuytu.github.io/facebook-clone-source
