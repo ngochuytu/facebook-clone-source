@@ -56,16 +56,9 @@ const Input = styled.input`
     }
 `;
 
-/* ${props => props.breakPointLarge ||
-        `
-            position: absolute;
-            left: 7.5px;
-        `
-    }
-*/
 const SearchIcon = styled(SearchIconFilled)`
-    position: ${props => props.breakPointLarge ? "absolute" : "initial"};
-    left: ${props => props.breakPointLarge ? "7.5px" : null};
+    position: ${props => props.breakPointDesktop ? "absolute" : "initial"};
+    left: ${props => props.breakPointDesktop ? "7.5px" : null};
 `;
 
 const SearchSection = styled(Container)`
@@ -105,6 +98,10 @@ const Overlay = styled.div`
     }
 `;
 
+const PointerCursorArrowBackIcon = styled(ArrowBackIcon)`
+    cursor: pointer;
+`;
+
 const SearchResult = styled.div`
     height: 300px;
     width: 100%;
@@ -119,11 +116,11 @@ function HeaderLeft() {
     const [openSearchSection, setOpenSearchSection] = useState(false);
 
     useEffect(() => {
-        if (breakPoint.large)
+        if (breakPoint.desktop)
             setResponsiveToggleSearchBar(true);
         else
             setResponsiveToggleSearchBar(false);
-    }, [breakPoint.large]);
+    }, [breakPoint.desktop]);
 
     if (refetchPostsContextValues)
         var { refetchPostsHandler } = refetchPostsContextValues;
@@ -136,13 +133,13 @@ function HeaderLeft() {
 
             <SearchBar onClick={() => setOpenSearchSection(!openSearchSection)}>
                 {
-                    (breakPoint.large || (!breakPoint.large && responsiveToggleSearchBar)) ?
+                    (breakPoint.desktop || (!breakPoint.desktop && responsiveToggleSearchBar)) ?
                         <>
                             <Input type="text" placeholder="Search Facebook" />
-                            <SearchIcon breakPointLarge={breakPoint.large} />
+                            <SearchIcon breakPointDesktop={breakPoint.desktop} />
                         </> :
                         <IconWrapper>
-                            <SearchIcon breakPointLarge={breakPoint.large} />
+                            <SearchIcon breakPointDesktop={breakPoint.desktop} />
                         </IconWrapper>
                 }
 
@@ -152,16 +149,13 @@ function HeaderLeft() {
             {
                 openSearchSection &&
                 <SearchSection>
-                    <Overlay breakPointLarge={breakPoint.large}>
-                        <ArrowBackIcon onClick={() => setOpenSearchSection(!openSearchSection)} />
+                    <Overlay>
+                        <PointerCursorArrowBackIcon onClick={() => setOpenSearchSection(!openSearchSection)} />
                         <SearchBar>
                             <Input type="text" placeholder="Search Facebook" />
                         </SearchBar>
                     </Overlay>
-                    <SearchResult>
-                        123
-                        123
-                    </SearchResult>
+                    <SearchResult></SearchResult>
                 </SearchSection>
             }
         </Container>
@@ -169,4 +163,4 @@ function HeaderLeft() {
     );
 }
 
-export default HeaderLeft;;
+export default HeaderLeft;

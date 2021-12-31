@@ -6,7 +6,8 @@ export const useBreakPointContext = () => useContext(BreakPointContext);
 
 export default function BreakPointContextProvider({ children }) {
     const [breakPoint, setBreakPoint] = useState({
-        large: true,
+        desktop: true,
+        large: false,
         medium: false,
         small: false,
         verySmall: false
@@ -15,13 +16,15 @@ export default function BreakPointContextProvider({ children }) {
     useEffect(() => {
         const detectScreenSize = windowWidth => {
             if (windowWidth > 1000)
-                return setBreakPoint({ large: true, medium: false, small: false, verySmall: false });
+                return setBreakPoint({ desktop: true, false: false, medium: false, small: false, verySmall: false });
             else if (windowWidth > 700)
-                return setBreakPoint({ large: false, medium: true, small: false, verySmall: false });
+                return setBreakPoint({ desktop: false, large: true, medium: false, small: false, verySmall: false });
+            else if (windowWidth > 500)
+                return setBreakPoint({ desktop: false, large: false, medium: true, small: false, verySmall: false });
             else if (windowWidth > 350)
-                return setBreakPoint({ large: false, medium: false, small: true, verySmall: false });
+                return setBreakPoint({ desktop: false, large: false, medium: false, small: true, verySmall: false });
             else
-                return setBreakPoint({ large: false, medium: false, small: false, verySmall: true });
+                return setBreakPoint({ desktop: false, large: false, medium: false, small: false, verySmall: true });
         };
 
         detectScreenSize(window.innerWidth);
