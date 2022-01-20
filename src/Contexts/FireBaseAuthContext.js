@@ -3,7 +3,7 @@ import { auth, database } from '../firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithPopup } from '@firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { sendPasswordResetEmail, updateProfile } from 'firebase/auth';
-import { collectionNames } from "../Constants/FireStoreNaming";
+import { firebaseCollections } from "../Constants/FireStoreNaming";
 
 const FireBaseAuthContext = createContext();
 
@@ -23,7 +23,7 @@ export function FireBaseAuthContextProvider({ children }) {
         onAuthStateChanged(auth, user => {
             //Update profile in authentication for the first time login/signup
             if (user?.displayName === null) {
-                getDoc(doc(database, collectionNames.users, user?.uid))
+                getDoc(doc(database, firebaseCollections.users.collectionName, user?.uid))
                     .then(snapshot => {
                         const userFromDoc = snapshot.data();
                         updateProfile(user, {
