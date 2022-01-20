@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useFireBaseAuthContext } from '../../../../../../Contexts/FireBaseAuthContext';
 import AvatarPic from '../../../../../../Images/Avatar.png';
-import { backgroundColorGreyHeader, colorGreySearchIcon } from '../../../../../../Constants/Colors';
+import { colorGreyHeader, colorGreySearchIcon } from '../../../../../../Constants/Colors';
 import Interaction from "./Interaction/Interaction";
 import More from './More/More';
 import { convertTimeStamp } from "../../../../../../Functions/ConvertTimeStamp";
@@ -14,14 +14,14 @@ const Content = styled.div``;
 const Container = styled.div` 
     margin-bottom: 10px;
     border-radius: 10px;
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
 
     & > *{
         padding: 10px 15px;
     }
     
     & > ${Content}{
-        padding: 10px 0px;
+        padding: 0px;
     }
     
     @media screen and (max-width: ${breakPointVerySmall}){
