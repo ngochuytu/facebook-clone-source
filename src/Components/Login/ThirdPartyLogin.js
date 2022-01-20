@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { database, googleAuthProvider } from '../../firebase';
 import { useFireBaseAuthContext } from '../../Contexts/FireBaseAuthContext';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { collectionNames } from "../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../Constants/FireStoreNaming";
 import { useHistory } from "react-router";
 
 
@@ -45,9 +45,9 @@ export default function ThirdPartyLogin({ img, title, thirdPartyName, setError }
                     const { user } = await loginThirdParty(googleAuthProvider);
                     const { uid, displayName, photoURL } = user;
                     //Add user to db if not exits
-                    const docExits = (await getDoc(doc(database, collectionNames.users, user.uid))).exists();
+                    const docExits = (await getDoc(doc(database, firebaseCollections.users.collectionName, user.uid))).exists();
                     if (!docExits) {
-                        await setDoc(doc(database, collectionNames.users, uid), {
+                        await setDoc(doc(database, firebaseCollections.users.collectionName, uid), {
                             uid: uid,
                             displayName: displayName,
                             photoURL: photoURL
