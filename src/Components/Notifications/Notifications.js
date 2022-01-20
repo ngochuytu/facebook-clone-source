@@ -1,8 +1,8 @@
 import { collection, doc, getDoc, getDocs } from "@firebase/firestore";
 import React, { useState, useEffect, useRef } from 'react';
 import styled from "styled-components";
-import { backgroundColorGreyHeader, colorGreyIconHeaderRight, colorGreyInput } from "../../Constants/Colors";
-import { collectionNames, documentNames } from "../../Constants/FireStoreNaming";
+import { colorGreyHeader, colorGreyIconHeaderRight, colorGreyInput } from "../../Constants/Colors";
+import { firebaseCollections } from "../../Constants/FireStoreNaming";
 import { headerSpacing } from "../../Constants/Spacing/Header";
 import { notificationSpacing } from "../../Constants/Spacing/Notifications";
 import { useFireBaseAuthContext } from "../../Contexts/FireBaseAuthContext";
@@ -20,7 +20,7 @@ const Container = styled.div`
     position: fixed;
     top: ${headerSpacing.height};
     right: 15px;
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
     border-radius: 5px;
     margin: 0 !important;
     box-shadow: 0 0 3px -1px #000000;
@@ -104,14 +104,14 @@ function Notifications() {
 
     useEffect(() => {
         const getNotifications = async () => {
-            const notificationsListCollectionSnapshot = await getDocs(collection(database, collectionNames.users, currentUser.uid, collectionNames.notifications, documentNames.notificationsDetails, collectionNames.notificationsList));
+            const notificationsListCollectionSnapshot = await getDocs(collection(database, firebaseCollections.users.collectionName, currentUser.uid, firebaseCollections.users.subCollections.notifications.collectionName, firebaseCollections.users.subCollections.notifications.documents.notificationsDetails.documentName, firebaseCollections.users.subCollections.notifications.subCollections.notificationsList.collectionName));
             const notifications = [];
 
             notificationsListCollectionSnapshot.forEach(notificationDoc => notifications.push(notificationDoc.data()));
 
             //Get user information of each notification based on interactionUid
             for (let i = 0; i < notifications.length; i++) {
-                const interactedUserSnapshot = await getDoc(doc(database, collectionNames.users, notifications[i].interactedUid));
+                const interactedUserSnapshot = await getDoc(doc(database, firebaseCollections.users.collectionName, notifications[i].interactedUid));
                 const interactedUser = interactedUserSnapshot.data();
                 notifications[i] = {
                     ...notifications[i],
