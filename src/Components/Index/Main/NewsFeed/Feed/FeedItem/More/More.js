@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import EditOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import MoreItem from './MoreItem';
-import { backgroundColorGreyHeader, colorGreyInput, colorGreySearchIcon } from '../../../../../../../Constants/Colors';
-
-
-
+import { colorGreyHeader, colorGreyInput, colorGreySearchIcon } from '../../../../../../../Constants/Colors';
 
 const Container = styled.div`
     position: relative;
@@ -30,15 +26,13 @@ const MoreHorizontalIcon = styled(MoreHorizIcon)`
 `;
 
 const ListMore = styled.ul`
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
     border: 1px solid ${colorGreyInput};
     border-radius: 5px;
-    /* display: none; */
     position: absolute;
     top: ${iconSize};
     right: 0;
 `;
-
 
 const More = ({ ownPost, postId, uid, content, attachmentFullPath, attachmentPreviewURL }) => {
     const [menuMoreOpen, setMenuMoreOpen] = useState(false);
