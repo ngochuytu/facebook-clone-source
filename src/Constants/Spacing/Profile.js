@@ -1,6 +1,6 @@
 export const profileSpacing = {
     width: {
         default: "80%",
-        large: "90%",
+        large: "95%",
     }
 }
