@@ -3,13 +3,13 @@ import styled from "styled-components";
 import AvatarPic from "../../../../../Images/Avatar.png";
 import { Link } from "react-router-dom";
 import NewPostPopup from "./NewPostPopup";
-import { backgroundColorGreyHeader, colorGreyInput, colorGreySearchIcon } from '../../../../../Constants/Colors';
+import { colorGreyHeader, colorGreyInput, colorGreySearchIcon } from '../../../../../Constants/Colors';
 import { useFireBaseAuthContext } from "../../../../../Contexts/FireBaseAuthContext";
 
 const Container = styled.div`
     display: flex;
     align-items: center;
-    background-color: ${backgroundColorGreyHeader};
+    background-color: ${colorGreyHeader};
     padding: 10px 15px;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -48,7 +48,6 @@ const FakeInput = styled.div`
 `;
 
 export default function NewPost() {
-    // const [post, setPost] = useState("");
     const [post, setPost] = useState({
         content: "",
         attachmentFile: null, //Để up file lên
