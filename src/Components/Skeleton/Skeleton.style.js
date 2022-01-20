@@ -1,5 +1,5 @@
 import { css, keyframes } from "styled-components";
-import { backgroundColorGreyHeader } from "../../Constants/Colors";
+import { colorGreyHeader } from "../../Constants/Colors";
 
 const keyFrameBrightness = keyframes`
     from{
@@ -10,7 +10,7 @@ const keyFrameBrightness = keyframes`
     }
 `;
 
-export const skeletonContainerBackgroundColor = backgroundColorGreyHeader;
+export const skeletonContainerBackgroundColor = colorGreyHeader;
 
 export const skeletonBackgroundColor = '#2a2c2d';
 
