@@ -5,7 +5,7 @@ import { database } from '../../../../firebase';
 import { useFireBaseAuthContext } from '../../../../Contexts/FireBaseAuthContext';
 import AvatarPic from '../../../../Images/Avatar.png';
 import { colorGreySearchIcon } from "../../../../Constants/Colors";
-import { collectionNames } from "../../../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../../../Constants/FireStoreNaming";
 import ListItem from "../../../ListItem/ListItem";
 
 const Header = styled.div``;
@@ -26,7 +26,7 @@ export default function Contact() {
     useEffect(() => {
         const getUsers = async () => {
             const users = [];
-            const usersSnapshot = await getDocs(collection(database, collectionNames.users));
+            const usersSnapshot = await getDocs(collection(database, firebaseCollections.users.collectionName));
             usersSnapshot.forEach(user => {
                 users.push(user.data());
             });
