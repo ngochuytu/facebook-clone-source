@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import styled from "styled-components";
 import NotificationItem from "../Components/Notifications/NotificationItem/NotificationItem";
 import { breakPointVerySmall } from "../Constants/BreakPoints";
-import { collectionNames, documentNames } from "../Constants/FireStoreNaming";
+import { firebaseCollections } from "../Constants/FireStoreNaming";
 import { notificationSpacing } from "../Constants/Spacing/Notifications";
 import { database } from "../firebase";
 import { useFireBaseAuthContext } from "./FireBaseAuthContext";
@@ -51,7 +51,7 @@ export function NotificationsProvider({ children }) {
     useEffect(() => {
         const getNumbersOfNewNotifications = async () => {
             if (currentUser) {
-                const notificationsDetailsSnapshot = await getDoc(doc(database, collectionNames.users, currentUser.uid, collectionNames.notifications, documentNames.notificationsDetails));
+                const notificationsDetailsSnapshot = await getDoc(doc(database, firebaseCollections.users.collectionName, currentUser.uid, firebaseCollections.users.subCollections.notifications.collectionName, firebaseCollections.users.subCollections.notifications.documents.notificationsDetails.documentName));
                 const notificationsDetailsDoc = notificationsDetailsSnapshot.data();
                 const numbersOfNewNotifications = notificationsDetailsDoc?.numbersOfNewNotifications;
                 numbersOfNewNotifications && setNumbersOfNewNotifications(numbersOfNewNotifications);
@@ -69,14 +69,14 @@ export function NotificationsProvider({ children }) {
             //onSnapshot always called the first time => show notification even if there's not changing in collection
             let firstOnSnapshotCall = false;
             //Listening for notificationsListCollection changes
-            const unsubscribe = onSnapshot(collection(database, collectionNames.users, currentUser.uid, collectionNames.notifications, documentNames.notificationsDetails, collectionNames.notificationsList), notificationsListSnapshot => {
+            const unsubscribe = onSnapshot(collection(database, firebaseCollections.users.collectionName, currentUser.uid, firebaseCollections.users.subCollections.notifications.collectionName, firebaseCollections.users.subCollections.notifications.documents.notificationsDetails.documentName, firebaseCollections.users.subCollections.notifications.subCollections.notificationsList.collectionName), notificationsListSnapshot => {
                 //If not first load
                 if (firstOnSnapshotCall) {
                     const notificationsListDocChange = notificationsListSnapshot.docChanges()[0];
                     if (notificationsListDocChange.type === "added") {
                         const newNotificationDoc = notificationsListDocChange.doc.data();
                         //Get interacted user
-                        getDoc(doc(database, collectionNames.users, newNotificationDoc.interactedUid)).then(userDocSnapshot => {
+                        getDoc(doc(database, firebaseCollections.users.collectionName, newNotificationDoc.interactedUid)).then(userDocSnapshot => {
                             //Client
                             const interactedUser = userDocSnapshot.data();
                             //Add notification popup
@@ -131,7 +131,7 @@ export function NotificationsProvider({ children }) {
 
     useEffect(() => {
         const listeningToNotificationsDetailsDocument = () => {
-            const unsubscribe = onSnapshot(doc(database, collectionNames.users, currentUser.uid, collectionNames.notifications, documentNames.notificationsDetails), notificationsDetailsSnapshot => {
+            const unsubscribe = onSnapshot(doc(database, firebaseCollections.users.collectionName, currentUser.uid, firebaseCollections.users.subCollections.notifications.collectionName, firebaseCollections.users.subCollections.notifications.documents.notificationsDetails.documentName), notificationsDetailsSnapshot => {
                 const notificationsDetailsDocumentChange = notificationsDetailsSnapshot.data();
                 const newNumbersOfNewNotifications = notificationsDetailsDocumentChange?.numbersOfNewNotifications || 0;
                 setNumbersOfNewNotifications(newNumbersOfNewNotifications);
@@ -153,7 +153,7 @@ export function NotificationsProvider({ children }) {
 
 
     const updateCurrentUserNumbersOfNewNotification = (newNumbersOfNewNotifications = 0) => {
-        setDoc(doc(database, collectionNames.users, currentUser.uid, collectionNames.notifications, documentNames.notificationsDetails), {
+        setDoc(doc(database, firebaseCollections.users.collectionName, currentUser.uid, firebaseCollections.users.subCollections.notifications.collectionName, firebaseCollections.users.subCollections.notifications.documents.notificationsDetails.documentName), {
             numbersOfNewNotifications: newNumbersOfNewNotifications > 0 ? newNumbersOfNewNotifications : 0
         });
     };
