@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from "styled-components";
 import { colorGreyMain } from "../../Constants/Colors";
 import Header from "../Header/Header";
@@ -13,6 +13,10 @@ const Container = styled.div`
 
 
 function Index() {
+    useEffect(() => {
+        document.title = "Bookmarks";
+    }, []);
+
     return (
         <Container>
             <Header />
