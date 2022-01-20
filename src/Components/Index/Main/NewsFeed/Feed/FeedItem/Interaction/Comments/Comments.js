@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { colorGreyInput, colorGreySearchIcon } from "../../../../../../../../Constants/Colors";
-import { collectionNames } from "../../../../../../../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../../../../../../../Constants/FireStoreNaming";
 import { INTERACTION_TYPES } from "../../../../../../../../Constants/InteractionEmotes";
 import { useFireBaseAuthContext } from "../../../../../../../../Contexts/FireBaseAuthContext";
 import { database } from "../../../../../../../../firebase";
@@ -55,28 +55,28 @@ function Comments({ newCommentInputRef, notificationsCollection }) {
     const { currentUser } = useFireBaseAuthContext();
     const { uid: postUid, id: postId, comments } = useInteractionContext();
     const { posts, setPosts } = usePostsContext();
-    const postingRef = useRef(false);
+    const postingCommentRef = useRef(false);
 
     const newCommentHandler = async e => {
         //Comment cần id vì có thể 1 người nhiều cmt
         const commentContent = e.target.innerText.trim();
-        if (!postingRef.current) {
+        if (!postingCommentRef.current) {
             if (e.keyCode === 13 && commentContent !== "") {
                 e.preventDefault();
-                postingRef.current = true;
+                postingCommentRef.current = true;
 
                 let docRef = null;
                 try {
                     const timeStamp = Timestamp.fromDate(new Date());
                     //Server
                     //Lấy id để update vào trong doc
-                    docRef = await addDoc(collection(database, collectionNames.posts, postId, collectionNames.comments), {
+                    docRef = await addDoc(collection(database, firebaseCollections.posts.collectionName, postId, firebaseCollections.posts.subCollections.comments.collectionName), {
                         uid: currentUser.uid,
                         content: commentContent,
                         timeStamp: timeStamp
                     });
 
-                    await setDoc(doc(database, collectionNames.posts, postId, collectionNames.comments, docRef.id), {
+                    await setDoc(doc(database, firebaseCollections.posts.collectionName, postId, firebaseCollections.posts.subCollections.comments.collectionName, docRef.id), {
                         id: docRef.id
                     }, { merge: true });
 
@@ -108,7 +108,7 @@ function Comments({ newCommentInputRef, notificationsCollection }) {
                 } catch (error) {
                     console.error(error);
                 }
-                postingRef.current = false;
+                postingCommentRef.current = false;
             }
         }
     };
