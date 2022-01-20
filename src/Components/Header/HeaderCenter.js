@@ -5,7 +5,7 @@ import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import GroupCircleOutlinedIcon from '@material-ui/icons/SupervisedUserCircleOutlined';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import { colorBlueHeaderCenter, colorGreyInput } from "../../Constants/Colors";
 import { headerCenterSpacing } from "../../Constants/Spacing/Header";
 import { useRefetchPostsContext } from "../../Contexts/RefetchPostsContext";
@@ -91,6 +91,7 @@ const NavigationWrapper = styled(Link)`
 
 function HeaderCenter() {
     const location = useLocation();
+    const history = useHistory();
     const [activeNavigationItem, setActiveNavigationItem] = useState(0);
     const refetchPostsContextValues = useRefetchPostsContext();
     if (refetchPostsContextValues)
@@ -117,6 +118,13 @@ function HeaderCenter() {
         };
     }, [activeNavigationItem, location.pathname]);
 
+    const returnToPreviousPage = (e) => {
+        if (location.pathname.includes("/bookmarks")) {
+            e.preventDefault();
+            history.goBack();
+        }
+    };
+
     return (
         <Container activeNavigationItem={activeNavigationItem}>
             <NavigationWrapper to='/' >
@@ -131,7 +139,7 @@ function HeaderCenter() {
             <NavigationWrapper to='/'>
                 <GroupCircleOutlinedIcon />
             </NavigationWrapper>
-            <NavigationWrapper to='/bookmarks'>
+            <NavigationWrapper to='/bookmarks' onClick={returnToPreviousPage}>
                 <MenuIcon />
             </NavigationWrapper>
         </Container>
