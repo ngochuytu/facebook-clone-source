@@ -3,7 +3,7 @@ import { deleteObject, ref } from "firebase/storage";
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { colorGreyInput } from "../../../../../../../Constants/Colors";
-import { collectionNames, documentNames } from "../../../../../../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../../../../../../Constants/FireStoreNaming";
 import { useNotificationsContext } from "../../../../../../../Contexts/NotificationsContext";
 import { database, storage } from '../../../../../../../firebase';
 import NewPostPopup from "../../../NewPost/NewPostPopup";
@@ -33,7 +33,7 @@ const MoreItem = ({ postId, uid, content, attachmentFullPath, attachmentPreviewU
     const deletePost = async () => {
         try {
             //Server
-            await deleteDoc(doc(database, collectionNames.posts, postId));
+            await deleteDoc(doc(database, firebaseCollections.posts.collectionName, postId));
             if (attachmentFullPath)
                 deleteObject(ref(storage, attachmentFullPath));
 
@@ -41,7 +41,7 @@ const MoreItem = ({ postId, uid, content, attachmentFullPath, attachmentPreviewU
             setPosts(posts.filter(post => post.id !== postId));
 
             //Delete comments and interactions notifications attached to that post
-            const q = query(collection(database, collectionNames.users, uid, collectionNames.notifications, documentNames.notificationsDetails, collectionNames.notificationsList), where("postId", "==", postId));
+            const q = query(collection(database, firebaseCollections.users.collectionName, uid, firebaseCollections.users.subCollections.notifications.collectionName, firebaseCollections.users.subCollections.notifications.documents.notificationsDetails.documentName, firebaseCollections.users.subCollections.notifications.subCollections.notificationsList.collectionName), where("postId", "==", postId));
             const notificationsListCollectionSnapshot = await getDocs(q);
             notificationsListCollectionSnapshot.forEach(notificationDoc => deleteDoc(notificationDoc.ref));
 
