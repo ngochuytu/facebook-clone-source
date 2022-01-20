@@ -1,17 +1,17 @@
 import React from 'react';
 import styled from "styled-components";
 import AvatarPic from '../../../Images/Avatar.png';
-import { backgroundColorGreyHeader, colorBlueHeaderCenter } from "../../../Constants/Colors";
+import { colorGreyHeader, colorBlueHeaderCenter } from "../../../Constants/Colors";
 import { doc, updateDoc } from "@firebase/firestore";
 import { database } from "../../../firebase";
-import { collectionNames, documentNames } from "../../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../../Constants/FireStoreNaming";
 import { useFireBaseAuthContext } from "../../../Contexts/FireBaseAuthContext";
 import { convertTimeStamp } from "../../../Functions/ConvertTimeStamp";
 import { Link } from "react-router-dom";
 import { INTERACTION_EMOTES } from '../../../Constants/InteractionEmotes';
 
 const Container = styled(Link)`
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
     display: flex;
     align-items: flex-start;
     max-height: 100px;
@@ -78,7 +78,7 @@ function NotificationItem({ id, postId, interactionType, displayName, photoURL, 
     const notificationItemClickHandler = async () => {
         //Mark as read
         if (!read) {
-            await updateDoc(doc(database, collectionNames.users, currentUser.uid, collectionNames.notifications, documentNames.notificationsDetails, collectionNames.notificationsList, id), {
+            await updateDoc(doc(database, firebaseCollections.users.collectionName, currentUser.uid, firebaseCollections.users.subCollections.notifications.collectionName, firebaseCollections.users.subCollections.notifications.documents.notificationsDetails.documentName, firebaseCollections.users.subCollections.notifications.subCollections.notificationsList.collectionName, id), {
                 read: true
             });
         }
