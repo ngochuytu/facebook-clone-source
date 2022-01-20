@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from "styled-components";
-import { backgroundColorGreyHeader, colorBlueHeaderCenter, colorGreyInput } from "../../../../../../../../Constants/Colors";
+import { colorGreyHeader, colorBlueHeaderCenter, colorGreyInput } from "../../../../../../../../Constants/Colors";
 import ThumbUpOutlinedIcon from '@material-ui/icons/ThumbUpOutlined';
 import ThumbUpFilledIcon from '@material-ui/icons/ThumbUp';
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
@@ -15,7 +15,7 @@ import { useFireBaseAuthContext } from "../../../../../../../../Contexts/FireBas
 import { useInteractionContext } from "../../FeedItem";
 import { deleteDoc, doc, getDoc, setDoc, updateDoc, Timestamp } from "@firebase/firestore";
 import { database } from "../../../../../../../../firebase";
-import { collectionNames } from "../../../../../../../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../../../../../../../Constants/FireStoreNaming";
 import { usePostsContext } from "../../../Feed";
 import { INTERACTION_EMOTES, INTERACTION_TYPES } from '../../../../../../../../Constants/InteractionEmotes';
 import { breakPointSmall, breakPointVerySmall } from "../../../../../../../../Constants/BreakPoints";
@@ -62,7 +62,7 @@ const InteractionsList = styled.div`
     display: flex;
     border: 1px solid ${colorGreyInput};
     border-radius: 999px;
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
     
     @media screen and (max-width: ${breakPointSmall}){
         left: -15px;
@@ -141,11 +141,11 @@ function Buttons({ newCommentInputRef, notificationsCollection }) {
 
     //Xử lý ấn emote + ấn buttonLike bên ngoài
     //-Nếu đã đang interact r:
-    //+Nếu chọn emote từ bảng popup => update interact
-    //+Nếu click button like bên ngoài => Xoá interact
+    // +Nếu chọn emote từ bảng popup => update interact
+    // +Nếu click button like bên ngoài => Xoá interact
     //-Nếu chưa interact:
-    //+Nếu chọn emote từ bảng popup => update interact
-    //+Nếu click button like bên ngoài => update interact like
+    // +Nếu chọn emote từ bảng popup => update interact
+    // +Nếu click button like bên ngoài => update interact like
 
     const interactButtonClickHandler = async (interactionType) => {
         //Đóng bảng chọn emotes
@@ -185,12 +185,12 @@ function Buttons({ newCommentInputRef, notificationsCollection }) {
             timeOutLikeButtonClick.current = setTimeout(() => {
                 const addInteractionAndNotificationsToCollection = async () => {
                     try {
-                        const snapshot = await getDoc(doc(database, collectionNames.posts, postId, collectionNames.interactions, currentUser.uid));
+                        const snapshot = await getDoc(doc(database, firebaseCollections.posts.collectionName, postId, firebaseCollections.posts.subCollections.interactions.collectionName, currentUser.uid));
                         //Nếu đã interact trong db + interact trong post client
                         //Update
                         if (snapshot.exists() && isCurrentUserInteracted) {
                             //Update interact
-                            await updateDoc(doc(database, collectionNames.posts, postId, collectionNames.interactions, currentUser.uid), {
+                            await updateDoc(doc(database, firebaseCollections.posts.collectionName, postId, firebaseCollections.posts.subCollections.interactions.collectionName, currentUser.uid), {
                                 interactionType: interactionType,
                                 timeStamp: timeStamp
                             });
@@ -201,7 +201,7 @@ function Buttons({ newCommentInputRef, notificationsCollection }) {
                         //Nếu chưa interact trong db + chưa interact post client
                         else if (snapshot.exists() === false && isCurrentUserInteracted === false) {
                             //Add interact
-                            await setDoc(doc(database, collectionNames.posts, postId, collectionNames.interactions, currentUser.uid), {
+                            await setDoc(doc(database, firebaseCollections.posts.collectionName, postId, firebaseCollections.posts.subCollections.interactions.collectionName, currentUser.uid), {
                                 interactionType: interactionType,
                                 uid: currentUser.uid,
                                 timeStamp: timeStamp
@@ -249,18 +249,18 @@ function Buttons({ newCommentInputRef, notificationsCollection }) {
             timeOutLikeButtonClick.current = setTimeout(() => {
                 const addInteractionAndNotificationsToCollection = async () => {
                     try {
-                        const snapshot = await getDoc(doc(database, collectionNames.posts, postId, collectionNames.interactions, currentUser.uid));
+                        const snapshot = await getDoc(doc(database, firebaseCollections.posts.collectionName, postId, firebaseCollections.posts.subCollections.interactions.collectionName, currentUser.uid));
                         //Nếu đã interact trong db
                         if (snapshot.exists() && isCurrentUserInteracted) {
                             //Remove interact
-                            await deleteDoc(doc(database, collectionNames.posts, postId, collectionNames.interactions, currentUser.uid));
+                            await deleteDoc(doc(database, firebaseCollections.posts.collectionName, postId, firebaseCollections.posts.subCollections.interactions.collectionName, currentUser.uid));
                             //Delete notification
                             notificationsCollection.delete(postUid, postId, currentUser.uid, snapshot.data().timeStamp);
                         }
                         //Nếu chưa interact trong db + chưa interact post client
                         else if (snapshot.exists() === false && isCurrentUserInteracted === false) {
                             //Add interact
-                            await setDoc(doc(database, collectionNames.posts, postId, collectionNames.interactions, currentUser.uid), {
+                            await setDoc(doc(database, firebaseCollections.posts.collectionName, postId, firebaseCollections.posts.subCollections.interactions.collectionName, currentUser.uid), {
                                 interactionType: interactionTypeLike,
                                 uid: currentUser.uid,
                                 timeStamp: timeStamp
