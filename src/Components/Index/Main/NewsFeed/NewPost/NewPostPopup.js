@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import reactDom from "react-dom";
 import styled from 'styled-components';
 import AvatarPic from '../../../../../Images/Avatar.png';
-import { backgroundColorGreyHeader, colorGreyInput, colorGreySearchIcon, colorGreyIconHeaderRight, colorGreyDisabledText, colorGreyDisabledButton, colorBlueActiveButton, colorRed } from '../../../../../Constants/Colors';
+import { colorGreyHeader, colorGreyInput, colorGreySearchIcon, colorGreyIconHeaderRight, colorGreyDisabledText, colorGreyDisabledButton, colorBlueActiveButton, colorRed } from '../../../../../Constants/Colors';
 import { Avatar } from './NewPost';
 import ClearIcon from '@material-ui/icons/Clear';
 import ImageIcon from '@material-ui/icons/Image';
@@ -10,7 +10,7 @@ import { addDoc, collection, doc, setDoc, Timestamp, updateDoc } from 'firebase/
 import { database, storage } from '../../../../../firebase';
 import { usePostsContext } from "../Feed/Feed";
 import { useFireBaseAuthContext } from "../../../../../Contexts/FireBaseAuthContext";
-import { collectionNames } from "../../../../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../../../../Constants/FireStoreNaming";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { breakPointMedium, breakPointSmall } from "../../../../../Constants/BreakPoints";
 import { Link } from "react-router-dom";
@@ -30,7 +30,7 @@ const Container = styled.div`
 `;
 
 const Form = styled.form`
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
     border-radius: 10px;
     width: clamp(400px, 50%, 500px);
 
@@ -161,7 +161,7 @@ const AddToPostAttachment = styled.div`
         background: ${colorGreyInput};
 
         ${Cancel}{
-            background: ${backgroundColorGreyHeader};
+            background: ${colorGreyHeader};
         }
     }
 `;
@@ -230,7 +230,7 @@ const Button = styled.button`
     font-size: 15px;
 `;
 
-//2 cases
+//2 trường hợp
 // + post new without postId postId, menuMoreOpen, setMenuMoreOpen, and have outerPost
 // + edit without outerPost and have postId, menuMoreOpen, setMenuMoreOpen
 // export default function NewPostPopup({ newPost, title, openPopup, setOpenPopup, outerPost, setOuterPost, postId, menuMoreOpen, setMenuMoreOpen }) {
@@ -366,8 +366,7 @@ export default function NewPostPopup({ newPost, editPost }) {
                     let attachmentFileDownloadURL = null;
 
                     //Nếu có file mới (Khi up mới hoặc khi edit user up file mới)
-                    //Up mới chắc chắn chạy vào đây, edit nếu bỏ ảnh sẽ k chạy vào 
-                    //Nên đoạn editPost bên dưới phải đặt lại default value cho fullPath và download url
+                    //Up mới chắc chắn chạy vào đây, edit nếu bỏ ảnh sẽ k chạy vào
                     if (popupPost.attachmentFile) {
                         const attachmentFileName = popupPost.attachmentFile.name;
                         const attachmentFileID = `${timeStamp}_${attachmentFileName}`;
@@ -380,7 +379,7 @@ export default function NewPostPopup({ newPost, editPost }) {
 
                     if (newPost) {
                         //Server
-                        const postRef = await addDoc(collection(database, collectionNames.posts), {
+                        const postRef = await addDoc(collection(database, firebaseCollections.posts.collectionName), {
                             uid: currentUser.uid,
                             content: trimmedPopupPostContent,
                             attachmentFullPath: attachmentFileFullPath,
@@ -389,7 +388,7 @@ export default function NewPostPopup({ newPost, editPost }) {
                         });
 
                         //Set post id 
-                        await setDoc(doc(database, collectionNames.posts, postRef.id), {
+                        await setDoc(doc(database, firebaseCollections.posts.collectionName, postRef.id), {
                             id: postRef.id
                         }, { merge: true });
 
@@ -421,26 +420,49 @@ export default function NewPostPopup({ newPost, editPost }) {
 
                     //Edit
                     if (editPost) {
-                        //Server
-                        //Xóa file cũ khi có file mới
-                        if (editPost.attachmentPreviewURL !== popupPost.attachmentPreviewURL && editPost.attachmentFullPath)
+                        // Server
+                        // Có file mới hoặc bỏ ảnh
+                        if (editPost.attachmentPreviewURL !== popupPost.attachmentPreviewURL) {
+                            // Xóa file cũ
                             deleteObject(ref(storage, editPost.attachmentFullPath));
 
-                        await updateDoc(doc(database, collectionNames.posts, postId), {
-                            content: trimmedPopupPostContent,
-                            attachmentFullPath: attachmentFileFullPath,
-                            attachmentPreviewURL: attachmentFileDownloadURL
-                        });
-                        //Client
-                        setPosts(posts.map(post => post.id === postId ?
-                            {
-                                ...post,
+                            await updateDoc(doc(database, firebaseCollections.posts.collectionName, postId), {
                                 content: trimmedPopupPostContent,
                                 attachmentFullPath: attachmentFileFullPath,
                                 attachmentPreviewURL: attachmentFileDownloadURL
-                            }
-                            : post)
-                        );
+                            });
+
+                            //Client
+                            setPosts(posts.map(post => post.id === postId ?
+                                {
+                                    ...post,
+                                    content: trimmedPopupPostContent,
+                                    attachmentFullPath: attachmentFileFullPath,
+                                    attachmentPreviewURL: attachmentFileDownloadURL
+                                }
+                                : post)
+                            );
+                        }
+                        //K có file mới
+                        else {
+                            await updateDoc(doc(database, firebaseCollections.posts.collectionName, postId), {
+                                content: trimmedPopupPostContent,
+                                attachmentFullPath: editPost.attachmentFullPath,
+                                attachmentPreviewURL: editPost.attachmentPreviewURL
+                            });
+
+                            //Client
+                            setPosts(posts.map(post => post.id === postId ?
+                                {
+                                    ...post,
+                                    content: trimmedPopupPostContent,
+                                    attachmentFullPath: editPost.attachmentFullPath,
+                                    attachmentPreviewURL: editPost.attachmentPreviewURL
+                                }
+                                : post)
+                            );
+                        }
+
                         //Close menu more
                         setMenuMoreOpen(!menuMoreOpen);
                     }
