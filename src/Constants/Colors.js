@@ -1,5 +1,6 @@
-export const backgroundColorGreyHeader = `#242526`;
+export const colorGreyHeader = `#242526`;
 export const colorBlueHeaderCenter = `#2e89ff`;
+export const colorBlueHeaderRightActiveIcon = "rgb(38,57,81)";
 export const colorGreyInput = '#3a3b3c';
 export const colorGreySearchIcon = '#a8abaf';
 export const colorGreyIconHeaderRight = `#e4e6ea`;
