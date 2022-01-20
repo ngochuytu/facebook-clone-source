@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import facebookIconSvg from '../../Images/Header/facebook-icon.svg';
 import SearchIconFilled from '@material-ui/icons/Search';
 import { Link, useLocation } from 'react-router-dom';
-import { backgroundColorGreyHeader, colorGreyInput, colorGreyMain, colorGreySearchIcon } from "../../Constants/Colors";
+import { colorGreyHeader, colorGreyInput, colorGreySearchIcon } from "../../Constants/Colors";
 import { headerLeftSpacing, headerSpacing } from "../../Constants/Spacing/Header";
 import { useRefetchPostsContext } from "../../Contexts/RefetchPostsContext";
 import { useBreakPointContext } from "../../Contexts/BreakPointContext";
-import { breakPointLarge, breakPointMedium, breakPointSmall, breakPointVerySmall } from "../../Constants/BreakPoints";
+import { breakPointLarge, breakPointSmall, breakPointVerySmall } from "../../Constants/BreakPoints";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { IconWrapper } from "./HeaderRight";
 
@@ -68,7 +68,7 @@ const SearchSection = styled(Container)`
     z-index: 3;
     display: flex;
     flex-direction: column;
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
 
     @media screen and (max-width: ${breakPointLarge}){
         width: 50vw;
@@ -142,8 +142,6 @@ function HeaderLeft() {
                             <SearchIcon breakPointDesktop={breakPoint.desktop} />
                         </IconWrapper>
                 }
-
-
             </SearchBar>
 
             {

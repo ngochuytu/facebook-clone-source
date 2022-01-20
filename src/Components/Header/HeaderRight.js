@@ -8,10 +8,10 @@ import AvatarPic from '../../Images/Avatar.png';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Notifications from "../Notifications/Notifications";
-import { colorBlueHeaderCenter, colorGreyIconHeaderRight, colorGreyInput, colorRed } from "../../Constants/Colors";
+import { colorBlueHeaderCenter, colorBlueHeaderRightActiveIcon, colorGreyIconHeaderRight, colorGreyInput, colorRed } from "../../Constants/Colors";
 import { headerLeftSpacing } from "../../Constants/Spacing/Header";
 import { useNotificationsContext } from "../../Contexts/NotificationsContext";
-import { breakPointLarge, breakPointMedium, breakPointVerySmall } from "../../Constants/BreakPoints";
+import { breakPointLarge, breakPointVerySmall } from "../../Constants/BreakPoints";
 
 const Container = styled.div`
     max-width: ${headerLeftSpacing.maxWidth};
@@ -30,7 +30,7 @@ const UserWrapper = styled(Link)`
     padding: 3.5px 9px 3.5px 4px;
     border-radius: 999px;
     cursor: pointer;
-    background: ${props => props.currentUserProfile ? 'rgb(38, 57, 81)' : null};
+    background: ${props => props.currentUserProfile ? colorBlueHeaderRightActiveIcon : null};
     margin-right: 12px;
 
     &:hover{
@@ -80,7 +80,7 @@ export const IconWrapper = styled.div`
     }
     
     &:nth-of-type(${props => props.activeIcon}){
-        background: rgb(38,56,81);
+        background: ${colorBlueHeaderRightActiveIcon};
     }
     
     &:nth-of-type(${props => props.activeIcon}) > *{
