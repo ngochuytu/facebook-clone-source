@@ -4,7 +4,7 @@ import { useFireBaseAuthContext } from '../../Contexts/FireBaseAuthContext';
 import styled from 'styled-components';
 import { setDoc, doc } from 'firebase/firestore';
 import { database } from '../../firebase';
-import { collectionNames } from "../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../Constants/FireStoreNaming";
 
 const DisplayNameGroup = styled.div`
     display: flex;
@@ -69,7 +69,8 @@ export default function SignupForm() {
             const { uid, displayName, photoURL } = user;
             const { firstName, lastName } = signUpState;
             //Write user
-            setDoc(doc(database, collectionNames.users, uid), {
+
+            setDoc(doc(database, firebaseCollections.users.collectionName, uid), {
                 uid: uid,
                 displayName: `${firstName.trim()} ${lastName.trim()}` || displayName,
                 photoURL: photoURL
