@@ -7,6 +7,7 @@ import NewPost from "../NewPost/NewPost";
 import { useFireBaseAuthContext } from "../../../../../Contexts/FireBaseAuthContext";
 import { colorGreySearchIcon } from "../../../../../Constants/Colors";
 import { useRefetchPostsContext } from "../../../../../Contexts/RefetchPostsContext";
+import { useUserProfileContext } from "../../../../Profile/Index";
 import { firebaseCollections } from "../../../../../Constants/FireStoreNaming";
 import PostSkeleton from "../../../../Skeleton/PostSkeleton";
 
@@ -25,13 +26,19 @@ export const usePostsContext = () => useContext(PostsContext);
 
 //postsPage: postId
 //profilePage: userProfile
-export default function Feed({ indexPage, postsPage, profilePage, postId, userProfile }) {
+export default function Feed({ indexPage, postsPage, profilePage, postId }) {
     const [loadingPosts, setLoadingPosts] = useState(true);
     const [posts, setPosts] = useState([]);
     const { currentUser } = useFireBaseAuthContext();
     const refetchPostsContextValues = useRefetchPostsContext();
+    const userProfileContextValues = useUserProfileContext();
+
     if (refetchPostsContextValues)
         var { refetchPosts } = refetchPostsContextValues;
+
+    if (profilePage)
+        var { userProfile } = userProfileContextValues;
+
 
     useEffect(() => {
         const getPosts = async () => {
