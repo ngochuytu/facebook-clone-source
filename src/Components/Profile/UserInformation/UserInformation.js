@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import AvatarPic from "../../../Images/Avatar.png";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
@@ -7,14 +7,16 @@ import { database } from "../../../firebase";
 import { useFireBaseAuthContext } from "../../../Contexts/FireBaseAuthContext";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
-import { backgroundColorGreyHeader, colorBlueHeaderCenter, colorGreyInput, colorGreySearchIcon, colorGreyIconHeaderRight, colorGreyDisabledButton, colorGreyDisabledText, colorBlueActiveButton } from "../../../Constants/Colors";
-import { collectionNames } from "../../../Constants/FireStoreNaming";
+import { colorGreyHeader, colorBlueHeaderCenter, colorGreyInput, colorGreySearchIcon, colorGreyIconHeaderRight, colorGreyDisabledButton, colorGreyDisabledText, colorBlueActiveButton } from "../../../Constants/Colors";
+import { firebaseCollections } from "../../../Constants/FireStoreNaming";
 import { profileSpacing } from "../../../Constants/Spacing/Profile";
-import { breakPointLarge, breakPointMedium, breakPointVerySmall } from "../../../Constants/BreakPoints";
+import { breakPointLarge, breakPointMedium, breakPointSmall, breakPointVerySmall } from "../../../Constants/BreakPoints";
+import { useLocation } from "react-router-dom";
+import { useUserProfileContext } from "../Index";
 
 
 const Container = styled.div`
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
 
     & > *{
         width: ${profileSpacing.width.default};
@@ -70,7 +72,7 @@ const CameraIcon = styled(CameraAltIcon)`
     border-radius: 50%;
     padding: 5px;
     color: white;
-    background: ${backgroundColorGreyHeader};
+    background: ${colorGreyHeader};
 `;
 
 const AvatarInput = styled.input`
@@ -225,55 +227,79 @@ const NavigationWrapper = styled(Link)`
         background: ${colorGreyInput};
     }
 
-    @media screen and (max-width: ${breakPointVerySmall}){
+    @media screen and (max-width: ${breakPointSmall}){
         font-size: 14px;
+        padding: 15px;
+    }
+
+    @media screen and (max-width: ${breakPointVerySmall}){
+        padding: 0px;
     }
 `;
 
 const ACTIVE_NAVIGATION_ITEM = {
     POSTS: 1,
-    FRIENDS: 2,
-    PHOTOS: 3,
+    ABOUT: 2,
+    FRIENDS: 3,
+    PHOTOS: 4,
 };
 
-function UserInformation({ profileUser, setProfileUser }) {
-    const [editBio, setEditBio] = useState(profileUser.bio);
+function UserInformation() {
+    const { userProfile, setUserProfile } = useUserProfileContext();
+    const [editBio, setEditBio] = useState(userProfile.bio);
     const [openEditBioForm, setOpenEditBioForm] = useState(false);
     const { currentUser } = useFireBaseAuthContext();
     const [activeNavigationItem, setActiveNavigationItem] = useState(ACTIVE_NAVIGATION_ITEM.POSTS);
     const openAndCloseEditBioFormHandler = () => setOpenEditBioForm(!openEditBioForm);
     const params = useParams();
+    const location = useLocation();
 
     const editBioInputHandler = e => setEditBio(e.target.value);
 
     const editBioSaveButtonHandler = e => {
         e.preventDefault();
-        if (editBio.length <= 50 && editBio !== profileUser.bio) {
-            setDoc(doc(database, collectionNames.users, profileUser.uid), {
+        if (editBio.length <= 50 && editBio !== userProfile.bio) {
+            setDoc(doc(database, firebaseCollections.users.collectionName, userProfile.uid), {
                 bio: editBio
             }, { merge: true }).then(() => {
                 setOpenEditBioForm(!openEditBioForm);
-                setProfileUser({ ...profileUser, bio: editBio });
+                setUserProfile({ ...userProfile, bio: editBio });
             });
         }
     };
+
+    useEffect(() => {
+        const styleNavigationItem = () => {
+            const pathname = location.pathname;
+            if (pathname.includes("/about"))
+                setActiveNavigationItem(2);
+            else if (pathname.includes("/friends"))
+                setActiveNavigationItem(3);
+            else if (pathname.includes("/photos"))
+                setActiveNavigationItem(4);
+            else
+                setActiveNavigationItem(1);
+        };
+
+        styleNavigationItem();
+    }, [location.pathname]);
 
     return (
         <Container>
             <Profile>
                 <AvatarWrapper>
-                    <Avatar src={profileUser.photoURL || AvatarPic} />
-                    {profileUser.uid === currentUser.uid ?
+                    <Avatar src={userProfile.photoURL || AvatarPic} />
+                    {userProfile.uid === currentUser.uid ?
                         <EditAvatarWrapper>
                             <AvatarInput type="file" name="avatar" title=" " />
                             <CameraIcon />
                         </EditAvatarWrapper>
                         : null}
                 </AvatarWrapper>
-                <DisplayName>{profileUser.displayName}</DisplayName>
+                <DisplayName>{userProfile.displayName}</DisplayName>
                 <BioWrapper>
-                    {profileUser.bio && <Bio>{profileUser.bio}</Bio>}
-                    {profileUser.uid === currentUser.uid ?
+                    {userProfile.bio && <Bio>{userProfile.bio}</Bio>}
+                    {userProfile.uid === currentUser.uid ?
                         !openEditBioForm ?
                             <EditBio onClick={openAndCloseEditBioFormHandler}>Edit Your Bio</EditBio>
                             : null
@@ -285,7 +311,7 @@ function UserInformation({ profileUser, setProfileUser }) {
                             <CharactersRemaining>{50 - (editBio?.length || 0)} characters remaining</CharactersRemaining>
                             <ButtonsContainer>
                                 <Button type="button" onClick={openAndCloseEditBioFormHandler}>Cancel</Button>
-                                <Button type="submit" disable={profileUser.bio === editBio} onClick={editBioSaveButtonHandler}>Save</Button>
+                                <Button type="submit" disable={userProfile.bio === editBio} onClick={editBioSaveButtonHandler}>Save</Button>
                             </ButtonsContainer>
                         </EditBioForm>
                         : null
@@ -294,13 +320,11 @@ function UserInformation({ profileUser, setProfileUser }) {
             </Profile>
             <Bar>
                 <NavigationBar activeNavigationItem={activeNavigationItem}>
-                    <NavigationWrapper to={`/${params.uid}`} onClick={() => setActiveNavigationItem(ACTIVE_NAVIGATION_ITEM.POSTS)}>Posts</NavigationWrapper>
-                    <NavigationWrapper to={`/${params.uid}/friends`} onClick={() => setActiveNavigationItem(ACTIVE_NAVIGATION_ITEM.FRIENDS)}>Friends</NavigationWrapper>
-                    <NavigationWrapper to={`/${params.uid}/photos`} onClick={() => setActiveNavigationItem(ACTIVE_NAVIGATION_ITEM.PHOTOS)}>Photos</NavigationWrapper>
+                    <NavigationWrapper to={`/${params.uid}`}>Posts</NavigationWrapper>
+                    <NavigationWrapper to={`/${params.uid}/about`}>About</NavigationWrapper>
+                    <NavigationWrapper to={`/${params.uid}/friends`}>Friends</NavigationWrapper>
+                    <NavigationWrapper to={`/${params.uid}/photos`}>Photos</NavigationWrapper>
                 </NavigationBar>
-                {/* <Buttons>
-                    <Button></Button>
-                </Buttons> */}
             </Bar>
         </Container>
     );

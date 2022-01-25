@@ -1,17 +1,18 @@
 import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { database } from "../../firebase";
+import { database, storage } from "../../firebase";
 import Error from "../Error/Error";
 import Header from "../Header/Header";
 import Main from "./Main/Main";
 import UserInformation from "./UserInformation/UserInformation";
-import { Route, useParams } from "react-router";
+import { useParams } from "react-router";
 import { colorGreyMain } from "../../Constants/Colors";
-import { collectionNames } from "../../Constants/FireStoreNaming";
+import { firebaseCollections } from "../../Constants/FireStoreNaming";
 import { profileSpacing } from "../../Constants/Spacing/Profile";
-import { breakPointLarge, breakPointMedium } from "../../Constants/BreakPoints";
+import { breakPointLarge } from "../../Constants/BreakPoints";
+import { getDownloadURL, ref, list } from "firebase/storage";
+import { createContext } from "react";
 
 const Container = styled.div`
     min-height: 100vh;
@@ -29,37 +30,70 @@ const WidthWrapper = styled.div`
     }
 `;
 
+const UserProfileContext = createContext();
+
+export const useUserProfileContext = () => useContext(UserProfileContext);
+
 export default function Profile() {
-    const location = useLocation();
-    const profileUid = location.pathname.substring(1);
-
+    const { uid: profileUid } = useParams();
     const [validUser, setValidUser] = useState(true);
-    const [profileUser, setProfileUser] = useState({});
-    const params = useParams();
+    const [userProfile, setUserProfile] = useState({});
+
+    const aboutDocuments = firebaseCollections.users.subCollections.about.documents;
+    const usersCollectionName = firebaseCollections.users.collectionName;
+    const aboutCollectionName = firebaseCollections.users.subCollections.about.collectionName;
 
 
     useEffect(() => {
-        profileUser.displayName ? document.title = `Facebook | ${profileUser.displayName}` : document.title = "Facebook";
-    }, [profileUser]);
+        userProfile.displayName ? document.title = `Facebook | ${userProfile.displayName}` : document.title = "Facebook";
+    }, [userProfile]);
 
     useEffect(() => {
-        const getProfileUser = async () => {
+        const getUserProfile = async () => {
             try {
-                const snapshot = await getDoc(doc(database, collectionNames.users, profileUid));
-                if (snapshot.exists()) {
-                    setProfileUser(snapshot.data());
+                const [
+                    userSnapshot,
+                    userAboutWorkAndEducation,
+                    userAboutPlacesLived,
+                    userAboutContactAndBasicInfo,
+                    userAboutFamilyAndRelationships,
+                    userAboutDetailsAboutYou,
+                    photosList
+                ] = await Promise.all([
+                    getDoc(doc(database, usersCollectionName, profileUid)),
+                    getDoc(doc(database, usersCollectionName, profileUid, aboutCollectionName, aboutDocuments.workAndEducation.documentName)),
+                    getDoc(doc(database, usersCollectionName, profileUid, aboutCollectionName, aboutDocuments.placesLived.documentName)),
+                    getDoc(doc(database, usersCollectionName, profileUid, aboutCollectionName, aboutDocuments.contactAndBasicInfo.documentName)),
+                    getDoc(doc(database, usersCollectionName, profileUid, aboutCollectionName, aboutDocuments.familyAndRelationships.documentName)),
+                    getDoc(doc(database, usersCollectionName, profileUid, aboutCollectionName, aboutDocuments.detailsAboutYou.documentName)),
+                    list(ref(storage, `${profileUid}/images`), { maxResults: 9 })
+                ]);
+
+                const photoDownloadURLs = await Promise.all(photosList.items.map(photoRef => getDownloadURL(photoRef)));
+
+                if (userSnapshot.exists()) {
+                    setUserProfile({
+                        ...userSnapshot.data(),
+                        photos: photoDownloadURLs,
+                        about: {
+                            [aboutDocuments.workAndEducation.documentName]: userAboutWorkAndEducation.data(),
+                            [aboutDocuments.placesLived.documentName]: userAboutPlacesLived.data(),
+                            [aboutDocuments.contactAndBasicInfo.documentName]: userAboutContactAndBasicInfo.data(),
+                            [aboutDocuments.familyAndRelationships.documentName]: userAboutFamilyAndRelationships.data(),
+                            [aboutDocuments.detailsAboutYou.documentName]: userAboutDetailsAboutYou.data(),
+                        }
+                    });
                     setValidUser(true);
                 }
                 else {
                     setValidUser(false);
-
                 }
             } catch (error) {
                 console.error(error);
             }
         };
 
-        getProfileUser();
+        getUserProfile();
     }, [profileUid]);
 
     return (
@@ -67,20 +101,18 @@ export default function Profile() {
             <Header />
             {
                 validUser ?
-                    profileUser.uid ?
-                        <>
-                            <UserInformation profileUid={profileUid} profileUser={profileUser} setProfileUser={setProfileUser} />
+                    userProfile.uid ?
+                        <UserProfileContext.Provider value={{ userProfile, setUserProfile }}>
+                            <UserInformation />
                             <WidthWrapper>
-                                <Route exact path={`/${params.uid}`}>
-                                    <Main profilePage={true} profileUser={profileUser} />
-                                </Route>
+                                <Main profilePage={true} />
                             </WidthWrapper>
-                        </>
+                        </UserProfileContext.Provider>
                         :
                         null
                     :
                     <Error />
             }
-        </Container>
+        </Container >
     );
 }
