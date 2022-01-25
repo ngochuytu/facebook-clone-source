@@ -36,7 +36,7 @@ function App() {
             <Route exact path='/posts/:postId'>
               {currentUser ? <Posts /> : <Redirect to="/login" />}
             </Route>
-            <Route exact path='/:uid'>
+            <Route path='/:uid'>
               {currentUser ? <Profile /> : <Redirect to="/login" />}
             </Route>
           </Switch>
