@@ -48,6 +48,45 @@ export const firebaseCollections = {
                             currentCity: "currentCity",
                             hometown: "hometown"
                         }
+                    },
+                    workAndEducation: {
+                        documentName: "workAndEducation",
+                        documentField: {
+                            workplace: "workplace",
+                            university: "university",
+                            highSchool: "highSchool"
+                        }
+                    },
+                    placesLived: {
+                        documentName: "placesLived",
+                        documentField: {
+                            currentCity: "currentCity",
+                            hometown: "hometown",
+                        }
+                    },
+                    contactAndBasicInfo: {
+                        documentName: "contactAndBasicInfo",
+                        documentField: {
+                            mobile: "mobile",
+                            email: "email",
+                            website: "website",
+                        }
+                    },
+                    familyAndRelationships: {
+                        documentName: "familyAndRelationships",
+                        documentField: {
+                            relationship: "relationship",
+                            familyMembers: "familyMembers",
+                        }
+                    },
+                    detailsAboutYou: {
+                        documentName: "detailsAboutYou",
+                        documentField: {
+                            aboutYou: "aboutYou",
+                            namePronunciation: "namePronunciation",
+                            otherName: "otherName",
+                            favoriteQuotes: "favoriteQuotes"
+                        }
                     }
                 }
             }
