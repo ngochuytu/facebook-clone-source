@@ -10,7 +10,7 @@ import { database } from "../../firebase";
 import NotificationItem from "./NotificationItem/NotificationItem";
 import NotificationsIconFilled from '@material-ui/icons/Notifications';
 import NotificationSkeleton from "../Skeleton/NotificationSkeleton";
-import { breakPointMedium, breakPointSmall, breakPointVerySmall } from "../../Constants/BreakPoints";
+import { breakPointSmall, breakPointVerySmall } from "../../Constants/BreakPoints";
 
 
 const Container = styled.div`
