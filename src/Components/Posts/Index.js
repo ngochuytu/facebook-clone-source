@@ -6,7 +6,7 @@ import Header from "../Header/Header";
 import Feed from "../Index/Main/NewsFeed/Feed/Feed";
 import { indexMainSpacing } from "../../Constants/Spacing/Index";
 import { useParams } from 'react-router-dom';
-import { breakPointLarge, breakPointMedium, breakPointSmall, breakPointVerySmall } from "../../Constants/BreakPoints";
+import { breakPointLarge, breakPointSmall, breakPointVerySmall } from "../../Constants/BreakPoints";
 
 const Container = styled.div`
     background: ${colorGreyMain};
