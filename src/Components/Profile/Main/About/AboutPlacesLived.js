@@ -12,6 +12,7 @@ function AboutPlacesLived() {
 
     const [fields, setFields] = useState([
         {
+            fieldTitle: "Current city",
             name: "Add current city",
             placeHolder: "Current city",
             openInput: false,
@@ -19,6 +20,7 @@ function AboutPlacesLived() {
             fireStoreFieldName: aboutPlacesLivedFieldName.currentCity
         },
         {
+            fieldTitle: "Hometown",
             name: "Add hometown",
             placeHolder: "Hometown",
             openInput: false,

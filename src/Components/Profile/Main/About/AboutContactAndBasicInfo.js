@@ -13,6 +13,7 @@ function AboutContactAndBasicInfo() {
 
     const [fields, setFields] = useState([
         {
+            fieldTitle: "Mobile",
             name: "Add phone number",
             placeHolder: "Mobile",
             openInput: false,
@@ -20,6 +21,7 @@ function AboutContactAndBasicInfo() {
             fireStoreFieldName: aboutContactAndBasicInfoFieldName.mobile
         },
         {
+            fieldTitle: "Email",
             name: "Add email address",
             placeHolder: "Email address",
             openInput: false,
@@ -27,6 +29,7 @@ function AboutContactAndBasicInfo() {
             fireStoreFieldName: aboutContactAndBasicInfoFieldName.email
         },
         {
+            fieldTitle: "Website",
             name: "Add a website",
             placeHolder: "Website",
             openInput: false,

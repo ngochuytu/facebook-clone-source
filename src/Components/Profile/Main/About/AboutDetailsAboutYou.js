@@ -12,6 +12,7 @@ function AboutDetailsAboutYou() {
 
     const [fields, setFields] = useState([
         {
+            fieldTitle: "About You",
             name: "Write some details about yourself",
             placeHolder: "About You",
             openInput: false,
@@ -19,6 +20,7 @@ function AboutDetailsAboutYou() {
             fireStoreFieldName: aboutDetailsAboutYouFieldName.aboutYou
         },
         {
+            fieldTitle: "Name pronunciation",
             name: "Add a name pronunciation",
             placeHolder: "Name pronunciation",
             openInput: false,
@@ -26,6 +28,7 @@ function AboutDetailsAboutYou() {
             fireStoreFieldName: aboutDetailsAboutYouFieldName.namePronunciation
         },
         {
+            fieldTitle: "Other names",
             name: "Add a nickname",
             placeHolder: "Other names",
             openInput: false,
@@ -33,6 +36,7 @@ function AboutDetailsAboutYou() {
             fireStoreFieldName: aboutDetailsAboutYouFieldName.otherName
         },
         {
+            fieldTitle: "Favorite Quotes",
             name: "Add your favorite quotations",
             placeHolder: "Favorite Quotes",
             openInput: false,

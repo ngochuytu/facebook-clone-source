@@ -5,6 +5,7 @@ import FieldAdd from "./FieldAdd";
 import FieldEdit from "./FieldEdit";
 import FieldInput from "./FieldInput";
 import FieldItem from "./FieldItem";
+import FieldTitle from "./FieldTitle";
 
 function Fields({ aboutName, fields, setFields }) {
     const { userProfile } = useUserProfileContext();
@@ -12,12 +13,13 @@ function Fields({ aboutName, fields, setFields }) {
     const lastOpenedFieldInputRef = useRef();
     //State fields pattern
     // [{
+    //  fieldTitle: string, Optional, page overview k có    
     //  name: string, 
     //  placeHolder: string, 
     //  openInput: true/false, 
     //  value: string,
     //  fireStoreFieldName: string, 
-    //  icon: Component
+    //  icon: Icon
     //}]
 
     const toggleFieldAddHandler = clickedFieldEditIndex => {
@@ -64,11 +66,14 @@ function Fields({ aboutName, fields, setFields }) {
                         }
                         else {
                             return (
-                                <FieldEdit
-                                    icon={field.icon}
-                                    fieldValue={userProfile?.about?.[aboutName]?.[field.fireStoreFieldName]}
-                                    toggleFieldAddHandler={() => toggleFieldAddHandler(index)}
-                                />
+                                <>
+                                    {field.fieldTitle && <FieldTitle fieldTitle={field.fieldTitle} />}
+                                    <FieldEdit
+                                        icon={field.icon}
+                                        fieldValue={userProfile?.about?.[aboutName]?.[field.fireStoreFieldName]}
+                                        toggleFieldAddHandler={() => toggleFieldAddHandler(index)}
+                                    />
+                                </>
                             );
                         }
                     }
@@ -89,10 +94,13 @@ function Fields({ aboutName, fields, setFields }) {
                         }
                         else {
                             return (
-                                <FieldAdd
-                                    fieldName={field.name}
-                                    toggleFieldAddHandler={() => toggleFieldAddHandler(index)}
-                                />
+                                <>
+                                    {field.fieldTitle && <FieldTitle fieldTitle={field.fieldTitle} />}
+                                    <FieldAdd
+                                        fieldName={field.name}
+                                        toggleFieldAddHandler={() => toggleFieldAddHandler(index)}
+                                    />
+                                </>
                             );
                         }
                     }
@@ -100,10 +108,13 @@ function Fields({ aboutName, fields, setFields }) {
                 :
 
                 fields.map(field =>
-                    <FieldItem
-                        icon={field.icon}
-                        fieldValue={userProfile?.about?.[aboutName]?.[field.fireStoreFieldName]}
-                    />
+                    <>
+                        {field.fieldTitle && <FieldTitle fieldTitle={field.fieldTitle} />}
+                        <FieldItem
+                            icon={field.icon}
+                            fieldValue={userProfile?.about?.[aboutName]?.[field.fireStoreFieldName]}
+                        />
+                    </>
                 )
 
             }

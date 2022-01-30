@@ -11,6 +11,7 @@ function AboutFamilyAndRelationships() {
 
     const [fields, setFields] = useState([
         {
+            fieldTitle: "Relationship",
             name: "Add a relationship status",
             placeHolder: "Relationship status",
             openInput: false,
@@ -18,6 +19,7 @@ function AboutFamilyAndRelationships() {
             fireStoreFieldName: aboutFamilyAndRelationshipsFieldName.relationship
         },
         {
+            fieldTitle: "Family",
             name: "Add a family member",
             placeHolder: "Family members",
             openInput: false,

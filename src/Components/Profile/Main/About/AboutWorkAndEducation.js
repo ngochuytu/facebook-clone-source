@@ -11,6 +11,7 @@ function AboutWorkAndEducation() {
 
     const [fields, setFields] = useState([
         {
+            fieldTitle: "Work",
             name: "Add a workplace",
             placeHolder: "Workplace",
             openInput: false,
@@ -18,6 +19,7 @@ function AboutWorkAndEducation() {
             fireStoreFieldName: aboutWorkAndEducationFieldName.workplace
         },
         {
+            fieldTitle: "High School",
             name: "Add a high school",
             placeHolder: "High school",
             openInput: false,
@@ -25,6 +27,7 @@ function AboutWorkAndEducation() {
             fireStoreFieldName: aboutWorkAndEducationFieldName.highSchool
         },
         {
+            fieldTitle: "University",
             name: "Add a university",
             placeHolder: "University",
             openInput: false,
