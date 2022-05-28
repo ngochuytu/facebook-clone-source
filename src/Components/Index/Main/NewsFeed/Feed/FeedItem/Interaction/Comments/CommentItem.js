@@ -32,6 +32,7 @@ const DisplayName = styled(Link)`
     display: block;
     font-size: 14px;
     margin-bottom: 2.5px;
+    width: max-content;
 
     &:hover{
         text-decoration: underline;
