@@ -1,8 +1,8 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
 import styled from 'styled-components';
 import FeedItem from './FeedItem/FeedItem';
 import { database } from '../../../../../firebase';
-import { collection, getDocs, query, orderBy, doc, getDoc, where } from '@firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, getDoc, where, limit, startAfter } from '@firebase/firestore';
 import NewPost from "../NewPost/NewPost";
 import { useFireBaseAuthContext } from "../../../../../Contexts/FireBaseAuthContext";
 import { colorGreySearchIcon } from "../../../../../Constants/Colors";
@@ -10,6 +10,7 @@ import { useRefetchPostsContext } from "../../../../../Contexts/RefetchPostsCont
 import { useUserProfileContext } from "../../../../Profile/Index";
 import { firebaseCollections } from "../../../../../Constants/FireStoreNaming";
 import PostSkeleton from "../../../../Skeleton/PostSkeleton";
+import useScrollToBottom from "../../../../../Hooks/useScrollToBottom";
 
 const Container = styled.div``;
 
@@ -23,12 +24,16 @@ const NoPostAvailable = styled.p`
 
 const PostsContext = createContext();
 export const usePostsContext = () => useContext(PostsContext);
+const LIMIT = 5;
 
 //postsPage: postId
 //profilePage: userProfile
 export default function Feed({ indexPage, postsPage, profilePage, postId }) {
     const [loadingPosts, setLoadingPosts] = useState(true);
     const [posts, setPosts] = useState([]);
+    const [loadMore, setLoadMore] = useState(false);
+    const lastDoc = useRef();
+    const isOutOfPosts = useRef(false);
     const { currentUser } = useFireBaseAuthContext();
     const refetchPostsContextValues = useRefetchPostsContext();
     const userProfileContextValues = useUserProfileContext();
@@ -38,6 +43,12 @@ export default function Feed({ indexPage, postsPage, profilePage, postId }) {
 
     if (profilePage)
         var { userProfile } = userProfileContextValues;
+
+    useScrollToBottom(()=>{
+        if((profilePage || indexPage) && !loadingPosts){
+            setLoadMore(!loadMore)
+        }
+    })
 
 
     useEffect(() => {
@@ -49,14 +60,25 @@ export default function Feed({ indexPage, postsPage, profilePage, postId }) {
             //userProfileUid for userProfile post
             //Sort by timeStamp
             if (profilePage) { //Profile page
-                //Cannot perform orderby on another field
-                q = query(collection(database, firebaseCollections.posts.collectionName), where("uid", "==", userProfile.uid));
+                if(lastDoc.current){
+                    //Cannot perform orderby on another field
+                    q = query(collection(database, firebaseCollections.posts.collectionName), where("uid", "==", userProfile.uid), orderBy("timeStamp", "desc"), startAfter(lastDoc.current), limit(LIMIT));
+                }
+                else {
+                    //Cannot perform orderby on another field
+                    q = query(collection(database, firebaseCollections.posts.collectionName), where("uid", "==", userProfile.uid), orderBy("timeStamp", "desc"), limit(LIMIT));
+                }
             }
             else if (postsPage) { //Posts Page
                 q = query(doc(database, firebaseCollections.posts.collectionName, postId));
             }
             else { //Index page
-                q = query(collection(database, firebaseCollections.posts.collectionName), orderBy("timeStamp", "desc"));
+                if(lastDoc.current){
+                    q = query(collection(database, firebaseCollections.posts.collectionName), orderBy("timeStamp", "desc"), startAfter(lastDoc.current), limit(LIMIT));
+                }
+                else{
+                    q = query(collection(database, firebaseCollections.posts.collectionName), orderBy("timeStamp", "desc"), limit(LIMIT));
+                }
             }
 
             if (postsPage) { //1 post
@@ -65,6 +87,13 @@ export default function Feed({ indexPage, postsPage, profilePage, postId }) {
             }
             else {
                 const postsSnapshot = await getDocs(q);
+                if(postsSnapshot.empty){
+                    lastDoc.current = undefined
+                    isOutOfPosts.current = true;
+                }
+                else{
+                    lastDoc.current = postsSnapshot.docs[postsSnapshot.docs.length - 1]
+                }
                 postsSnapshot.forEach(doc => {
                     posts.push(doc.data());
                 });
@@ -125,23 +154,20 @@ export default function Feed({ indexPage, postsPage, profilePage, postId }) {
             if (userProfile?.uid) {
                 posts.sort((postA, postB) => postB.timeStamp.seconds - postA.timeStamp.seconds);
             }
-            setPosts(posts);
+            setPosts(prev => [...prev, ...posts]);
             setLoadingPosts(false);
-
         };
 
-        getPosts();
-
-    }, [refetchPosts, userProfile?.uid, postId, postsPage, profilePage]);
+        if(!isOutOfPosts.current){
+            getPosts();
+        }
+    }, [refetchPosts, userProfile?.uid, postId, postsPage, profilePage, loadMore]);
 
     return (
         <Container>
             <PostsContext.Provider value={{ posts, setPosts }}>
                 {(indexPage || userProfile?.uid === currentUser.uid) ? <NewPost /> : null}
-
-                {loadingPosts ?
-                    (postsPage ? <PostSkeleton /> : new Array(3).fill(0).map((item, index) => <PostSkeleton key={index} />)) :
-                    posts.length ? posts.map(
+                {posts.length ? posts.map(
                         ({ id, uid, photoURL, displayName, timeStamp, content, attachmentFullPath, attachmentPreviewURL, interactions, comments }) =>
                             <FeedItem
                                 key={id}
@@ -155,8 +181,12 @@ export default function Feed({ indexPage, postsPage, profilePage, postId }) {
                                 attachmentPreviewURL={attachmentPreviewURL}
                                 interactions={interactions}
                                 comments={comments}
-                            />)
-                        : <NoPostAvailable>No post available</NoPostAvailable>
+                            />) 
+                : (!loadingPosts && <NoPostAvailable>No post available</NoPostAvailable>)}
+
+                {loadingPosts && 
+                    (postsPage ? <PostSkeleton /> : new Array(3).fill(0).map((_, index) => <PostSkeleton key={index} />))
+                    
                 }
             </PostsContext.Provider>
         </Container>
